@@ -1,0 +1,30 @@
+.profile-drawer {
+  width: 300px;
+  border-left: 1px solid var(--border);
+  padding: 20px;
+}
+
+.profile-drawer img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  display: block;
+  margin: auto;
+}
+
+.profile-drawer h2 {
+  text-align: center;
+  margin-top: 15px;
+}
+
+.profile-drawer p {
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+.profile-section {
+  margin-top: 20px;
+  background: var(--bg-card);
+  padding: 15px;
+  border-radius: 10px;
+}

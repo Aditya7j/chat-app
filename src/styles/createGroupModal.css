@@ -1,0 +1,66 @@
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.group-modal {
+  width: 500px;
+  background: var(--bg-secondary);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.modal-header {
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border);
+}
+
+.modal-header button {
+  background: transparent;
+  color: white;
+  font-size: 20px;
+}
+
+.modal-body {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.modal-body input {
+  height: 50px;
+  background: var(--bg-card);
+  border: none;
+  border-radius: 10px;
+  padding: 0 15px;
+  color: white;
+}
+
+.selected-users {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.selected-users span {
+  background: var(--accent);
+  padding: 8px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+}
+
+.create-group-btn {
+  height: 50px;
+  background: var(--accent);
+  color: white;
+  border-radius: 10px;
+}

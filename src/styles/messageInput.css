@@ -1,0 +1,31 @@
+.message-input-wrapper {
+  height: 80px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  gap: 15px;
+}
+
+.message-input-wrapper input {
+  flex: 1;
+  height: 50px;
+  background: var(--bg-card);
+  border: none;
+  border-radius: 12px;
+  color: white;
+  padding: 0 15px;
+}
+
+.message-input-wrapper button {
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  background: var(--accent);
+  color: white;
+  font-size: 18px;
+}
+
+.attach-btn {
+  background: var(--bg-card) !important;
+}

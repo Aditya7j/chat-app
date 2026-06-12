@@ -1,0 +1,26 @@
+:root {
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --bg-card: #243244;
+
+  --text-primary: #ffffff;
+  --text-secondary: #94a3b8;
+
+  --accent: #6366f1;
+  --accent-hover: #4f46e5;
+
+  --border: #334155;
+
+  --success: #22c55e;
+  --danger: #ef4444;
+
+  --sidebar-width: 80px;
+  --chatlist-width: 320px;
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+
+  --shadow:
+    0px 4px 20px rgba(0, 0, 0, 0.15);
+}
