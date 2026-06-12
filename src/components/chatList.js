@@ -1,11 +1,14 @@
 import "../styles/chatList.css";
 import SearchBar from "./searchBar";
 import ChatCard from "./chatCard";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import CreateGroupModal from "./CreateGroupModal";
+import { ChatContext } from "../context/ChatContext";
 
 const ChatList = () => {
     const [groupOpen, setGroupOpen] = useState(false);
+
+    const { chats, setSelectedChat } = useContext(ChatContext);
 
     const handleGroup = () => {
         setGroupOpen(true);
@@ -28,11 +31,21 @@ const ChatList = () => {
             <SearchBar />
 
             <div className="chat-list-body">
-                <ChatCard />
-                <ChatCard />
-                <ChatCard />
-                <ChatCard />
-                <ChatCard />
+                {chats.length > 0 ? (
+                    chats.map((chat) => (
+                        <ChatCard
+                            key={chat._id}
+                            chat={chat}
+                            onClick={() =>
+                                setSelectedChat(chat)
+                            }
+                        />
+                    ))
+                ) : (
+                    <p className="no-chat">
+                        No chats found
+                    </p>
+                )}
 
                 <CreateGroupModal
                     open={groupOpen}

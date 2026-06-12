@@ -1,8 +1,12 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import "../styles/register.css";
+import Swal from "sweetalert2";
+import api from "../services/api";
+import { useNavigate } from "react-router-dom";
 
 function Register() {
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         name: "",
         email: "",
@@ -17,12 +21,47 @@ function Register() {
         }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
-        console.log(formData);
+        if (formData.password !== formData.confirmPassword) {
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Passwords do not match",
+            });
+            return;
+        }
 
-        // API Call Later
+        try {
+            const response = await api.post(
+                "/auth/register",
+                {
+                    name: formData.name,
+                    email: formData.email,
+                    password: formData.password,
+                }
+            );
+
+            console.log(response.data);
+
+            Swal.fire({
+                icon: "success",
+                title: "Success",
+                text: "Registration successful!",
+            }).then(() => {
+                navigate("/");
+            })
+
+        } catch (error) {
+            Swal.fire({
+                icon: "error",
+                title: "Registration Failed",
+                text:
+                    error.response?.data?.message ||
+                    "Something went wrong",
+            });
+        }
     };
 
     return (

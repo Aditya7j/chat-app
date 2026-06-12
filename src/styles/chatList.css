@@ -5,13 +5,14 @@
   border-right: 1px solid var(--border);
   display: flex;
   flex-direction: column;
+  padding: 8px;
 }
 
 .chat-list-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px;
+  padding: 12px 2px;
 }
 
 .chat-list-header h2 {

@@ -1,8 +1,16 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import "../styles/login.css";
+import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
+import api from "../services/api";
+import { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
 
 function Login() {
+    const navigate = useNavigate();
+    const { setUser } = useContext(AuthContext);
+
     const [formData, setFormData] = useState({
         email: "",
         password: "",
@@ -15,12 +23,44 @@ function Login() {
         }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
-        console.log(formData);
+        try {
+            const response = await api.post(
+                "/auth/login",
+                {
+                    email: formData.email,
+                    password: formData.password,
+                }
+            );
 
-        // API Call Later
+            const userData = response.data;
+
+            localStorage.setItem(
+                "userInfo",
+                JSON.stringify(userData)
+            );
+
+            setUser(userData);
+
+            Swal.fire({
+                icon: "success",
+                title: "Welcome Back",
+                text: "Login successful",
+            }).then(() => {
+                navigate("/chat");
+            });
+
+        } catch (error) {
+            Swal.fire({
+                icon: "error",
+                title: "Login Failed",
+                text:
+                    error.response?.data?.message ||
+                    "Invalid credentials",
+            });
+        }
     };
 
     return (
