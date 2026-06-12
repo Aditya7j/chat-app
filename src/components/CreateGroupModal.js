@@ -7,7 +7,6 @@ const CreateGroupModal = ({ open, onClose }) => {
     return (
         <div className="modal-overlay">
             <div className="group-modal">
-
                 <div className="modal-header">
                     <h2>Create Group</h2>
 
@@ -17,7 +16,6 @@ const CreateGroupModal = ({ open, onClose }) => {
                 </div>
 
                 <div className="modal-body">
-
                     <input
                         type="text"
                         placeholder="Group Name"
@@ -36,9 +34,7 @@ const CreateGroupModal = ({ open, onClose }) => {
                     <button className="create-group-btn">
                         Create Group
                     </button>
-
                 </div>
-
             </div>
         </div>
     );
