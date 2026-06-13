@@ -7,7 +7,6 @@ import { ChatContext } from "../context/ChatContext";
 
 const ChatList = () => {
     const [groupOpen, setGroupOpen] = useState(false);
-
     const { chats, setSelectedChat } = useContext(ChatContext);
 
     const handleGroup = () => {

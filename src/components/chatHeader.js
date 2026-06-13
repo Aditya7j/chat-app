@@ -2,16 +2,18 @@ import "../styles/chatHeader.css";
 import { FiPhone, FiVideo, FiMoreVertical } from "react-icons/fi";
 
 const ChatHeader = () => {
+    const userDetails = JSON.parse(localStorage.getItem("userInfo"));
+
     return (
         <div className="chat-header">
             <div className="chat-user">
                 <img
-                    src="https://i.pravatar.cc/150?img=15"
+                    src="https://i.pravatar.cc/150?img=8"
                     alt="user"
                 />
 
                 <div>
-                    <h3>Rahul Sharma</h3>
+                    <h3>{userDetails.name}</h3>
                     <span>Online</span>
                 </div>
             </div>

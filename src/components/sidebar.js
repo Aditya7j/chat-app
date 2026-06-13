@@ -34,7 +34,7 @@ const Sidebar = () => {
 
             <div className="sidebar-profile">
                 <img
-                    src="https://i.pravatar.cc/150?img=8"
+                    src="https://i.pravatar.cc/150?img=2"
                     alt="profile"
                 />
             </div>

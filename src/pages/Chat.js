@@ -21,11 +21,7 @@ const Chat = () => {
                     },
                 };
 
-                const { data } = await api.get(
-                    "/chat",
-                    config
-                );
-
+                const { data } = await api.get("/chat", config);
                 setChats(data);
             } catch (error) {
                 console.log(error);

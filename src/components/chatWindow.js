@@ -7,15 +7,11 @@ import MessageInput from "./messageInput";
 const ChatWindow = () => {
     return (
         <section className="chat-window">
-
             <ChatHeader />
-
             <div className="messages-container">
-
                 <MessageBubble
                     text="Hey Rahul!"
                 />
-
                 <MessageBubble
                     own
                     text="Hi Aditya, how's the project going?"
@@ -29,9 +25,7 @@ const ChatWindow = () => {
                     own
                     text="Awesome. Let's finish backend tomorrow."
                 />
-
             </div>
-
             <MessageInput />
 
         </section>
