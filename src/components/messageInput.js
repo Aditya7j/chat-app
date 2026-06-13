@@ -1,21 +1,29 @@
 import "../styles/messageInput.css";
+
 import {
     FiSend,
-    FiPaperclip
+    FiPaperclip,
 } from "react-icons/fi";
 
-import { useState, useContext } from "react";
+import {
+    useState,
+    useContext,
+} from "react";
 
 import api from "../services/api";
-import { ChatContext } from "../context/ChatContext";
+import socket from "../services/socket";
+
+import {
+    ChatContext,
+} from "../context/ChatContext";
 
 const MessageInput = () => {
 
-    const [content, setContent] = useState("");
+    const [content, setContent] =
+        useState("");
 
     const {
         selectedChat,
-        messages,
         setMessages,
     } = useContext(ChatContext);
 
@@ -26,28 +34,38 @@ const MessageInput = () => {
         try {
 
             const userInfo = JSON.parse(
-                localStorage.getItem("userInfo")
+                localStorage.getItem(
+                    "userInfo"
+                )
             );
 
             const config = {
                 headers: {
-                    Authorization: `Bearer ${userInfo.token}`,
+                    Authorization:
+                        `Bearer ${userInfo.token}`,
                 },
             };
 
-            const { data } = await api.post(
-                "/message",
-                {
-                    content,
-                    chatId: selectedChat._id,
-                },
-                config
-            );
+            const { data } =
+                await api.post(
+                    "/message",
+                    {
+                        content,
+                        chatId:
+                            selectedChat._id,
+                    },
+                    config
+                );
 
-            setMessages([
-                ...messages,
+            setMessages((prev) => [
+                ...prev,
                 data,
             ]);
+
+            socket.emit(
+                "new message",
+                data
+            );
 
             setContent("");
 
@@ -56,7 +74,9 @@ const MessageInput = () => {
         }
     };
 
-    const handleKeyDown = (e) => {
+    const handleKeyDown = (
+        e
+    ) => {
         if (e.key === "Enter") {
             sendMessage();
         }
@@ -70,16 +90,22 @@ const MessageInput = () => {
                 placeholder="Write a message..."
                 value={content}
                 onChange={(e) =>
-                    setContent(e.target.value)
+                    setContent(
+                        e.target.value
+                    )
                 }
-                onKeyDown={handleKeyDown}
+                onKeyDown={
+                    handleKeyDown
+                }
             />
 
             <button className="attach-btn">
                 <FiPaperclip />
             </button>
 
-            <button onClick={sendMessage}>
+            <button
+                onClick={sendMessage}
+            >
                 <FiSend />
             </button>
 

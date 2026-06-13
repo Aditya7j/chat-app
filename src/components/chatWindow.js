@@ -1,13 +1,11 @@
 import "../styles/chatWindow.css";
-
 import { useContext, useEffect } from "react";
 import { ChatContext } from "../context/ChatContext";
-
 import api from "../services/api";
-
 import ChatHeader from "./chatHeader";
 import MessageInput from "./messageInput";
 import MessageBubble from "./messageBubble";
+import socket from "../services/socket";
 
 const ChatWindow = () => {
     const {
@@ -16,11 +14,28 @@ const ChatWindow = () => {
         setMessages,
     } = useContext(ChatContext);
 
+    // Setup socket once
+    useEffect(() => {
+        const userInfo = JSON.parse(
+            localStorage.getItem("userInfo")
+        );
+
+        socket.emit("setup", userInfo);
+
+        socket.on("connected", () => {
+            console.log("Socket Connected");
+        });
+
+    }, []);
+
+    // Fetch messages when chat changes
     useEffect(() => {
         const fetchMessages = async () => {
+
             if (!selectedChat) return;
 
             try {
+
                 const userInfo = JSON.parse(
                     localStorage.getItem("userInfo")
                 );
@@ -44,7 +59,38 @@ const ChatWindow = () => {
         };
 
         fetchMessages();
+
     }, [selectedChat, setMessages]);
+
+    // Listen for realtime messages
+    useEffect(() => {
+
+        socket.on(
+            "message received",
+            (newMessage) => {
+
+                setMessages((prev) => {
+
+                    const exists = prev.some(
+                        (msg) =>
+                            msg._id === newMessage._id
+                    );
+
+                    if (exists) return prev;
+
+                    return [
+                        ...prev,
+                        newMessage,
+                    ];
+                });
+            }
+        );
+
+        return () => {
+            socket.off("message received");
+        };
+
+    }, [setMessages]);
 
     if (!selectedChat) {
         return (
