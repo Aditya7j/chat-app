@@ -1,43 +1,50 @@
 import "../styles/searchBar.css";
 import { FiSearch } from "react-icons/fi";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import api from "../services/api";
+import { useDebounce } from "../hooks/useDebounce";
 
 const SearchBar = () => {
     const [search, setSearch] = useState("");
     const [results, setResults] = useState([]);
+    const debouncedValue = useDebounce(search, 300);
 
     const handleSearch = async (e) => {
-        const value = e.target.value;
-
-        setSearch(value);
-
-        if (!value.trim()) {
-            setResults([]);
-            return;
-        }
-
-        try {
-            const userInfo = JSON.parse(
-                localStorage.getItem("userInfo")
-            );
-
-            const config = {
-                headers: {
-                    Authorization: `Bearer ${userInfo.token}`,
-                },
-            };
-
-            const { data } = await api.get(
-                `/user?search=${value}`,
-                config
-            );
-
-            setResults(data);
-        } catch (error) {
-            console.log(error);
-        }
+        setSearch(e.target.value);
     };
+
+
+    useEffect(() => {
+        const searchUsers = async () => {
+            if (!debouncedValue.trim()) {
+                setResults([]);
+                return;
+            }
+
+            try {
+                const userInfo = JSON.parse(
+                    localStorage.getItem("userInfo")
+                );
+
+                const config = {
+                    headers: {
+                        Authorization: `Bearer ${userInfo.token}`,
+                    },
+                };
+
+                const { data } = await api.get(
+                    `/user?search=${debouncedValue}`,
+                    config
+                );
+
+                setResults(data);
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        searchUsers();
+    }, [debouncedValue])
+
 
     return (
         <div className="search-wrapper">

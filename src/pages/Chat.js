@@ -26,7 +26,6 @@ const Chat = () => {
                     config
                 );
 
-                console.log("chat data",data)
                 setChats(data);
             } catch (error) {
                 console.log(error);
