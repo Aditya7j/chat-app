@@ -19,43 +19,22 @@ function App() {
         )
       );
 
-      console.log(
-        "USER INFO:",
-        userInfo
-      );
-
       if (userInfo) {
 
         socket.emit(
           "setup",
           userInfo
         );
-
-        console.log(
-          "SETUP EMITTED:",
-          userInfo.name
-        );
       }
     };
 
     const handleConnect = () => {
-
-      console.log(
-        "SOCKET CONNECTED:",
-        socket.id
-      );
-
       sendSetup();
     };
 
     const handleOnlineUsers = (
       users
     ) => {
-
-      console.log(
-        "ONLINE USERS RECEIVED:",
-        users
-      );
 
       setOnlineUsers(users);
     };

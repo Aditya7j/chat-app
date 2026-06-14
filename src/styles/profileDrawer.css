@@ -1,6 +1,6 @@
 .profile-drawer {
   width: 300px;
-  border-left: 1px solid var(--border);
+  border-right: 1px solid var(--border);
   padding: 20px;
 }
 
@@ -27,4 +27,23 @@
   background: var(--bg-card);
   padding: 15px;
   border-radius: 10px;
+}
+
+.close-btn {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 20px;
+  margin-left: auto;
+  color: var(--text-primary);
+}
+
+.upload-btn {
+  margin-top: 15px;
+  background: var(--accent);
+  color: white;
+  padding: 10px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  display: inline-block;
 }

@@ -89,18 +89,22 @@ const ChatCard = ({ chat, onClick }) => {
   return (
     <div
       className={`chat-card ${selectedChat?._id ===
-          chat._id
-          ? "active"
-          : ""
+        chat._id
+        ? "active"
+        : ""
         }`}
       onClick={onClick}
     >
       <div className="chat-avatar">
 
         <img
-          src={`https://ui-avatars.com/api/?name=${encodeURIComponent(
-            getChatName()
-          )}&background=random`}
+          src={
+            getOtherUser()?.avatar
+              ? `http://localhost:5000${getOtherUser().avatar}`
+              : `https://ui-avatars.com/api/?name=${encodeURIComponent(
+                getChatName()
+              )}&background=random`
+          }
           alt="avatar"
         />
 

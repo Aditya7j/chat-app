@@ -23,8 +23,7 @@ const ChatWindow = () => {
 
     const messagesEndRef = useRef(null);
 
-    const [typing, setTyping] =
-        useState(false);
+    const [typing, setTyping] = useState(false);
 
     // Fetch messages when chat changes
     useEffect(() => {
@@ -101,7 +100,6 @@ const ChatWindow = () => {
 
     // Typing Indicator
     useEffect(() => {
-
         socket.on(
             "typing",
             (chatId) => {

@@ -93,9 +93,13 @@ const ChatHeader = () => {
             <div className="chat-user">
 
                 <img
-                    src={`https://ui-avatars.com/api/?name=${encodeURIComponent(
-                        getChatName()
-                    )}&background=random`}
+                    src={
+                        getOtherUser()?.avatar
+                            ? `http://localhost:5000${getOtherUser().avatar}`
+                            : `https://ui-avatars.com/api/?name=${encodeURIComponent(
+                                getChatName()
+                            )}&background=random`
+                    }
                     alt="user"
                 />
 
