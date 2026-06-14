@@ -12,6 +12,8 @@ import {
 
 import api from "../services/api";
 import socket from "../services/socket";
+import EmojiPicker from "emoji-picker-react";
+import { FiSmile } from "react-icons/fi";
 
 import {
     ChatContext,
@@ -19,8 +21,8 @@ import {
 
 const MessageInput = () => {
 
-    const [content, setContent] =
-        useState("");
+    const [content, setContent] = useState("");
+    const [showEmoji, setShowEmoji] = useState(false);
 
     const {
         selectedChat,
@@ -46,6 +48,14 @@ const MessageInput = () => {
             );
 
         }, 1000);
+    };
+
+    const onEmojiClick = (emojiData) => {
+        setContent(
+            (prev) => prev + emojiData.emoji
+        );
+
+        setShowEmoji(false);
     };
 
     const sendMessage = async () => {
@@ -105,7 +115,17 @@ const MessageInput = () => {
 
     return (
         <div className="message-input-wrapper">
-
+            {
+                showEmoji && (
+                    <div className="emoji-picker">
+                        <EmojiPicker
+                            onEmojiClick={
+                                onEmojiClick
+                            }
+                        />
+                    </div>
+                )
+            }
             <input
                 type="text"
                 placeholder="Write a message..."
@@ -115,6 +135,15 @@ const MessageInput = () => {
                     handleKeyDown
                 }
             />
+
+            <button
+                className="emoji-btn"
+                onClick={() =>
+                    setShowEmoji(!showEmoji)
+                }
+            >
+                <FiSmile />
+            </button>
 
             <button className="attach-btn">
                 <FiPaperclip />
