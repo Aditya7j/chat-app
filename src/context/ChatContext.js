@@ -7,10 +7,21 @@ const ChatProvider = ({ children }) => {
     const [chats, setChats] = useState([]);
     const [selectedChat, setSelectedChat] = useState(null);
     const [messages, setMessages] = useState([]);
+    const [onlineUsers, setOnlineUsers] = useState([]);
 
     return (
         <ChatContext.Provider
-            value={{ chats, setChats, selectedChat, setSelectedChat, messages, setMessages }}>
+            value={{
+                chats,
+                setChats,
+                selectedChat,
+                setSelectedChat,
+                messages,
+                setMessages,
+                onlineUsers,
+                setOnlineUsers,
+            }}
+        >
             {children}
         </ChatContext.Provider>
     );

@@ -27,6 +27,27 @@ const MessageInput = () => {
         setMessages,
     } = useContext(ChatContext);
 
+    const handleTyping = (e) => {
+
+        setContent(e.target.value);
+
+        if (!selectedChat) return;
+
+        socket.emit(
+            "typing",
+            selectedChat._id
+        );
+
+        setTimeout(() => {
+
+            socket.emit(
+                "stop typing",
+                selectedChat._id
+            );
+
+        }, 1000);
+    };
+
     const sendMessage = async () => {
 
         if (!content.trim()) return;
@@ -89,11 +110,7 @@ const MessageInput = () => {
                 type="text"
                 placeholder="Write a message..."
                 value={content}
-                onChange={(e) =>
-                    setContent(
-                        e.target.value
-                    )
-                }
+                onChange={handleTyping}
                 onKeyDown={
                     handleKeyDown
                 }

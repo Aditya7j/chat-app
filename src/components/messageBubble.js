@@ -1,6 +1,6 @@
 import "../styles/messageBubble.css";
 
-const MessageBubble = ({ own, text }) => {
+const MessageBubble = ({ own, text, createdAt }) => {
     return (
         <div
             className={`message-row ${own ? "own-message" : ""
@@ -11,7 +11,13 @@ const MessageBubble = ({ own, text }) => {
                 <p>{text}</p>
 
                 <span className="message-time">
-                    10:45 AM
+                    {new Date(createdAt).toLocaleTimeString(
+                        [],
+                        {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                        }
+                    )}
                 </span>
 
             </div>

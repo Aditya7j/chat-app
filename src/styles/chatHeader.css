@@ -24,7 +24,6 @@
 }
 
 .chat-user span {
-  color: var(--success);
   font-size: 14px;
 }
 
@@ -43,4 +42,12 @@
   align-items: center;
   justify-content: center;
   font-size: 18px;
+}
+
+.online{
+  color: var(--success);
+}
+
+.offline{
+  color: var(--danger);
 }

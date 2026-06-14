@@ -9,14 +9,32 @@ import { useContext } from "react";
 import { ChatContext } from "../context/ChatContext";
 
 const ChatHeader = () => {
-    const { selectedChat } =
-        useContext(ChatContext);
+
+    const {
+        selectedChat,
+        onlineUsers,
+    } = useContext(ChatContext);
 
     const userInfo = JSON.parse(
         localStorage.getItem("userInfo")
     );
 
+    const getOtherUser = () => {
+
+        if (!selectedChat) return null;
+
+        if (selectedChat.isGroupChat) {
+            return null;
+        }
+
+        return selectedChat.users.find(
+            (user) =>
+                user._id !== userInfo._id
+        );
+    };
+
     const getChatName = () => {
+
         if (!selectedChat) return "";
 
         if (selectedChat.isGroupChat) {
@@ -24,17 +42,56 @@ const ChatHeader = () => {
         }
 
         const otherUser =
-            selectedChat.users.find(
-                (user) =>
-                    user._id !== userInfo._id
-            );
+            getOtherUser();
 
-        return otherUser?.name;
+        return otherUser?.name || "";
+    };
+
+    const isOnline = () => {
+
+        if (
+            !selectedChat ||
+            selectedChat.isGroupChat
+        ) {
+            return false;
+        }
+
+        const otherUser =
+            getOtherUser();
+
+        return onlineUsers.some(
+            (user) =>
+                user.userId ===
+                otherUser?._id
+        );
+    };
+
+    const getLastSeen = () => {
+
+        const otherUser =
+            getOtherUser();
+
+        if (!otherUser?.lastSeen) {
+            return "Offline";
+        }
+
+        const lastSeenDate =
+            new Date(otherUser.lastSeen);
+
+        return `Last seen ${lastSeenDate.toLocaleTimeString(
+            [],
+            {
+                hour: "2-digit",
+                minute: "2-digit",
+            }
+        )}`;
     };
 
     return (
         <div className="chat-header">
+
             <div className="chat-user">
+
                 <img
                     src={`https://ui-avatars.com/api/?name=${encodeURIComponent(
                         getChatName()
@@ -43,12 +100,29 @@ const ChatHeader = () => {
                 />
 
                 <div>
+
                     <h3>{getChatName()}</h3>
-                    <span>Online</span>
+
+                    <span
+                        className={
+                            isOnline()
+                                ? "online"
+                                : "offline"
+                        }
+                    >
+                        {selectedChat?.isGroupChat
+                            ? "Group Chat"
+                            : isOnline()
+                                ? "Online"
+                                : getLastSeen()}
+                    </span>
+
                 </div>
+
             </div>
 
             <div className="chat-actions">
+
                 <button>
                     <FiPhone />
                 </button>
@@ -60,7 +134,9 @@ const ChatHeader = () => {
                 <button>
                     <FiMoreVertical />
                 </button>
+
             </div>
+
         </div>
     );
 };

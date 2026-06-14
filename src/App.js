@@ -1,24 +1,43 @@
 import AppRoutes from "./routes/AppRoutes";
-import { useEffect } from "react";
+import { useEffect, useContext } from "react";
 import socket from "./services/socket";
+import { ChatContext } from "./context/ChatContext";
 import "./styles/global.css";
 
 function App() {
+
+  const { setOnlineUsers } =
+    useContext(ChatContext);
+
   useEffect(() => {
 
     const userInfo = JSON.parse(
-      localStorage.getItem("userInfo")
+      localStorage.getItem(
+        "userInfo"
+      )
     );
 
     if (userInfo) {
-      socket.emit("setup", userInfo);
+      socket.emit(
+        "setup",
+        userInfo
+      );
     }
 
-    socket.on("connected", () => {
-      console.log("Socket Ready");
-    });
+    socket.on(
+      "online users",
+      (users) => {
+        setOnlineUsers(users);
+      }
+    );
 
-  }, []);
+    return () => {
+      socket.off(
+        "online users"
+      );
+    };
+
+  }, [setOnlineUsers]);
 
   return (
     <div>

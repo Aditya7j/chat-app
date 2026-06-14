@@ -1,11 +1,18 @@
 import "../styles/chatWindow.css";
-import { useContext, useEffect } from "react";
+import {
+    useContext,
+    useEffect,
+    useRef,
+    useState,
+} from "react";
+
 import { ChatContext } from "../context/ChatContext";
 import api from "../services/api";
+import socket from "../services/socket";
 import ChatHeader from "./chatHeader";
 import MessageInput from "./messageInput";
 import MessageBubble from "./messageBubble";
-import socket from "../services/socket";
+import logoImg from "../../src/assest/chat-logo.avif"
 
 const ChatWindow = () => {
     const {
@@ -14,19 +21,10 @@ const ChatWindow = () => {
         setMessages,
     } = useContext(ChatContext);
 
-    // Setup socket once
-    useEffect(() => {
-        const userInfo = JSON.parse(
-            localStorage.getItem("userInfo")
-        );
+    const messagesEndRef = useRef(null);
 
-        socket.emit("setup", userInfo);
-
-        socket.on("connected", () => {
-            console.log("Socket Connected");
-        });
-
-    }, []);
+    const [typing, setTyping] =
+        useState(false);
 
     // Fetch messages when chat changes
     useEffect(() => {
@@ -37,19 +35,23 @@ const ChatWindow = () => {
             try {
 
                 const userInfo = JSON.parse(
-                    localStorage.getItem("userInfo")
+                    localStorage.getItem(
+                        "userInfo"
+                    )
                 );
 
                 const config = {
                     headers: {
-                        Authorization: `Bearer ${userInfo.token}`,
+                        Authorization:
+                            `Bearer ${userInfo.token}`,
                     },
                 };
 
-                const { data } = await api.get(
-                    `/message/${selectedChat._id}`,
-                    config
-                );
+                const { data } =
+                    await api.get(
+                        `/message/${selectedChat._id}`,
+                        config
+                    );
 
                 setMessages(data);
 
@@ -71,12 +73,15 @@ const ChatWindow = () => {
 
                 setMessages((prev) => {
 
-                    const exists = prev.some(
-                        (msg) =>
-                            msg._id === newMessage._id
-                    );
+                    const exists =
+                        prev.some(
+                            (msg) =>
+                                msg._id ===
+                                newMessage._id
+                        );
 
-                    if (exists) return prev;
+                    if (exists)
+                        return prev;
 
                     return [
                         ...prev,
@@ -87,25 +92,68 @@ const ChatWindow = () => {
         );
 
         return () => {
-            socket.off("message received");
+            socket.off(
+                "message received"
+            );
         };
 
     }, [setMessages]);
 
+    // Typing Indicator
+    useEffect(() => {
+
+        socket.on(
+            "typing",
+            (chatId) => {
+
+                if (
+                    selectedChat &&
+                    selectedChat._id ===
+                    chatId
+                ) {
+                    setTyping(true);
+                }
+            }
+        );
+
+        socket.on(
+            "stop typing",
+            (chatId) => {
+
+                if (
+                    selectedChat &&
+                    selectedChat._id ===
+                    chatId
+                ) {
+                    setTyping(false);
+                }
+            }
+        );
+
+        return () => {
+            socket.off("typing");
+            socket.off(
+                "stop typing"
+            );
+        };
+
+    }, [selectedChat]);
+
+    // Auto scroll
+    useEffect(() => {
+        messagesEndRef.current?.scrollIntoView(
+            {
+                behavior: "smooth",
+            }
+        );
+    }, [messages, typing]);
+
     if (!selectedChat) {
         return (
             <section className="chat-window">
-                <div
-                    style={{
-                        height: "100%",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        color: "#8b9bb4",
-                        fontSize: "20px",
-                    }}
-                >
-                    Select a chat to start messaging
+                <div className="chat-inner-wrapper">
+                    <img src={logoImg} alt="err" className="chat-inner-wrapper-img" />
+                    <h3>Select a chat to start messaging</h3>
                 </div>
             </section>
         );
@@ -117,6 +165,7 @@ const ChatWindow = () => {
 
     return (
         <section className="chat-window">
+
             <ChatHeader />
 
             <div className="messages-container">
@@ -126,27 +175,45 @@ const ChatWindow = () => {
                         style={{
                             textAlign: "center",
                             marginTop: "100px",
-                            color: "#8b9bb4",
+                            color: "#8b9bb4"
                         }}
                     >
                         No messages yet
                     </h2>
                 ) : (
-                    messages.map((message) => (
-                        <MessageBubble
-                            key={message._id}
-                            text={message.content}
-                            own={
-                                message.sender._id ===
-                                userInfo._id
-                            }
-                        />
-                    ))
+                    messages.map(
+                        (message) => (
+                            <MessageBubble
+                                key={message._id}
+                                text={message.content}
+                                createdAt={message.createdAt}
+                                own={message.sender._id === userInfo._id} />
+                        )
+                    )
                 )}
+
+                {typing && (
+                    <p
+                        style={{
+                            color: "#8b9bb4",
+                            fontSize: "14px",
+                            padding: "10px"
+                        }}
+                    >
+                        Typing...
+                    </p>
+                )}
+
+                <div
+                    ref={
+                        messagesEndRef
+                    }
+                ></div>
 
             </div>
 
             <MessageInput />
+
         </section>
     );
 };

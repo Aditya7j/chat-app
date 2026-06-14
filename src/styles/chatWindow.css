@@ -5,6 +5,25 @@
   flex-direction: column;
 }
 
+.chat-inner-wrapper{
+  height: 100%;
+  display: flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction: column;
+  gap: 20px;
+  color: #8b9bb4;
+  font-size: 20px;
+}
+
+.chat-inner-wrapper-img{
+  width: 300px;
+  height: 300px;
+  object-fit: contain;
+  border-radius: 12px;
+  mix-blend-mode: overlay;
+}
+
 .messages-container {
   flex: 1;
   overflow-y: auto;

@@ -43,6 +43,7 @@ function Login() {
             );
 
             setUser(userData);
+            console.log('userdata',userData);
 
             Swal.fire({
                 icon: "success",
