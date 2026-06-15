@@ -1,5 +1,5 @@
 .chat-list {
-  width: 340px;
+  width: 400px;
   height: 100vh;
   background: var(--bg-primary);
   border-right: 1px solid var(--border);
