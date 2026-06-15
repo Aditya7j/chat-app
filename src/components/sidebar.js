@@ -19,6 +19,9 @@ const Sidebar = () => {
     const [openProfile, setOpenProfile] =
         useState(false);
 
+    console.log("user", user);
+
+
     return (
         <>
             <aside className="sidebar">

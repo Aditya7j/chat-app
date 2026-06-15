@@ -5,20 +5,21 @@
   flex-direction: column;
   position: relative;
   overflow: hidden;
+  background: #07122f;
 }
 
-.chat-inner-wrapper{
+.chat-inner-wrapper {
   height: 100%;
   display: flex;
-  align-items:center;
-  justify-content:center;
+  align-items: center;
+  justify-content: center;
   flex-direction: column;
   gap: 20px;
   color: #8b9bb4;
   font-size: 20px;
 }
 
-.chat-inner-wrapper-img{
+.chat-inner-wrapper-img {
   width: 300px;
   height: 300px;
   object-fit: contain;
@@ -29,5 +30,40 @@
 .messages-container {
   flex: 1;
   overflow-y: auto;
+  overflow-x: hidden;
   padding: 25px;
+  scroll-behavior: smooth;
+
+  /* Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(139, 155, 180, 0.4) transparent;
+}
+
+/* Chrome Scrollbar */
+.messages-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.messages-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.messages-container::-webkit-scrollbar-thumb {
+  background: rgba(139, 155, 180, 0.25);
+  border-radius: 20px;
+  transition: all 0.3s ease;
+}
+
+.messages-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(139, 155, 180, 0.7);
+}
+
+/* Smooth scrollbar appearance */
+.messages-container:hover::-webkit-scrollbar-thumb {
+  background: rgba(139, 155, 180, 0.5);
+}
+
+/* Optional subtle glow */
+.messages-container::-webkit-scrollbar-thumb {
+  box-shadow: 0 0 10px rgba(139, 155, 180, 0.2);
 }

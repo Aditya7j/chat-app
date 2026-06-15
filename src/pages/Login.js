@@ -2,18 +2,15 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import "../styles/login.css";
 import { useNavigate } from "react-router-dom";
-import Swal from "sweetalert2";
 import api from "../services/api";
 import socket from "../services/socket";
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
+import toast from "react-hot-toast";
 
 function Login() {
-
     const navigate = useNavigate();
-
-    const { setUser } =
-        useContext(AuthContext);
+    const { setUser } = useContext(AuthContext);
 
     const [formData, setFormData] =
         useState({
@@ -22,7 +19,6 @@ function Login() {
         });
 
     const handleChange = (e) => {
-
         setFormData((prev) => ({
             ...prev,
             [e.target.name]:
@@ -32,101 +28,56 @@ function Login() {
     };
 
     const handleSubmit = async (e) => {
-
         e.preventDefault();
-
         try {
-
-            const response =
-                await api.post(
-                    "/auth/login",
-                    {
-                        email:
-                            formData.email,
-                        password:
-                            formData.password,
-                    }
-                );
-
-            const userData =
-                response.data;
-
-            localStorage.setItem(
-                "userInfo",
-                JSON.stringify(
-                    userData
-                )
+            const response = await api.post("/auth/login",
+                {
+                    email:
+                        formData.email,
+                    password:
+                        formData.password,
+                }
             );
 
-            setUser(userData);
+            const userData = response.data;
+            localStorage.setItem("userInfo", JSON.stringify(userData));
 
+            setUser(userData);
             socket.emit(
                 "setup",
                 userData
             );
 
-            console.log(
-                "SETUP SENT FROM LOGIN",
-                userData
+            toast.success(
+                "Login successful"
             );
 
-            Swal.fire({
-                icon: "success",
-                title:
-                    "Welcome Back",
-                text:
-                    "Login successful",
-            }).then(() => {
-
+            setTimeout(() => {
                 navigate("/chat");
-
-            });
+            }, 1000);
 
         } catch (error) {
-
-            Swal.fire({
-                icon: "error",
-                title:
-                    "Login Failed",
-                text:
-                    error.response
-                        ?.data
-                        ?.message ||
-                    "Invalid credentials",
-            });
-
+            toast.error(
+                error.response
+                    ?.data
+                    ?.message ||
+                "Invalid credentials"
+            );
         }
     };
 
     return (
         <div className="login-page">
-
             <div className="login-card">
-
                 <div className="login-header">
-
-                    <h1>
-                        ChatSphere
-                    </h1>
-
-                    <p>
-                        Sign in to continue chatting
-                    </p>
-
+                    <h1>ChatSphere</h1>
+                    <p>Sign in to continue chatting</p>
                 </div>
-
                 <form
                     className="login-form"
-                    onSubmit={
-                        handleSubmit
-                    }
-                >
-
+                    onSubmit={handleSubmit}>
                     <div className="form-group">
-
-                        <label>
-                            Email
-                        </label>
+                        <label> Email </label>
 
                         <input
                             type="email"
@@ -138,16 +89,15 @@ function Login() {
                                 handleChange
                             }
                             placeholder="Enter your email"
+                            required
                         />
 
                     </div>
 
                     <div className="form-group">
-
                         <label>
                             Password
                         </label>
-
                         <input
                             type="password"
                             name="password"
@@ -158,10 +108,10 @@ function Login() {
                                 handleChange
                             }
                             placeholder="Enter your password"
+                            required
                         />
 
                     </div>
-
                     <button
                         type="submit"
                     >
@@ -169,23 +119,15 @@ function Login() {
                     </button>
 
                 </form>
-
                 <div className="auth-footer">
-
                     <p>
-
                         Don't have an account?
-
                         <Link to="/register">
                             Register
                         </Link>
-
                     </p>
-
                 </div>
-
             </div>
-
         </div>
     );
 }

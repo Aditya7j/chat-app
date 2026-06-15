@@ -3,6 +3,7 @@ import { useEffect, useContext } from "react";
 import socket from "./services/socket";
 import { ChatContext } from "./context/ChatContext";
 import "./styles/global.css";
+import { Toaster } from "react-hot-toast";
 
 function App() {
 
@@ -80,6 +81,12 @@ function App() {
 
   return (
     <div>
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          duration: 3000,
+        }}
+      />
       <AppRoutes />
     </div>
   );

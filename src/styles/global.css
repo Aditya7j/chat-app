@@ -9,7 +9,7 @@
 body {
   background: var(--bg-primary);
   color: var(--text-primary);
-  font-family: Inter, sans-serif;
+  font-family: "Montserrat", sans-serif;
 }
 
 a {

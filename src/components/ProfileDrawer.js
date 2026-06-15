@@ -17,6 +17,7 @@ const ProfileDrawer = ({
     const {
         user,
         setUser,
+        logout,
     } = useContext(AuthContext);
 
     const [loading, setLoading] =
@@ -92,6 +93,36 @@ const ProfileDrawer = ({
         }
     };
 
+    const handleLogout = async () => {
+
+        try {
+
+            const userInfo =
+                JSON.parse(
+                    localStorage.getItem(
+                        "userInfo"
+                    )
+                );
+
+            await api.post(
+                "/auth/logout",
+                {},
+                {
+                    headers: {
+                        Authorization:
+                            `Bearer ${userInfo.token}`,
+                    },
+                }
+            );
+
+        } catch (error) {
+            console.log(error);
+        } finally {
+            logout();
+            window.location.href = "/";
+        }
+    };
+
     if (!open) return null;
 
     return (
@@ -151,6 +182,15 @@ const ProfileDrawer = ({
             <div className="profile-section">
                 Files
             </div>
+
+            <button
+                className="logout-btn"
+                onClick={
+                    handleLogout
+                }
+            >
+                Logout
+            </button>
 
         </div>
     );
