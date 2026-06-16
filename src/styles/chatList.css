@@ -6,6 +6,7 @@
   display: flex;
   flex-direction: column;
   padding: 8px;
+  flex-shrink: 0;
 }
 
 .chat-list-header {
@@ -17,6 +18,7 @@
 
 .chat-list-header h2 {
   font-size: 22px;
+  font-weight: 600;
 }
 
 .chat-list-header button {
@@ -24,18 +26,114 @@
   color: white;
   padding: 10px 14px;
   border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.chat-list-header button:hover {
+  opacity: 0.9;
 }
 
 .chat-list-body {
   overflow-y: auto;
   flex: 1;
   margin-top: 15px;
+
+  scrollbar-width: thin;
+  scrollbar-color: rgba(139, 155, 180, 0.35) transparent;
 }
 
-.no-chat{
+.chat-list-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.chat-list-body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.chat-list-body::-webkit-scrollbar-thumb {
+  background: rgba(139, 155, 180, 0.3);
+  border-radius: 20px;
+}
+
+.chat-list-body::-webkit-scrollbar-thumb:hover {
+  background: rgba(139, 155, 180, 0.6);
+}
+
+.no-chat {
   font-size: 20px;
   line-height: 24px;
   text-align: center;
   text-transform: capitalize;
   margin: 20px 0 0;
+}
+
+/* ========================= */
+/* TABLET */
+/* ========================= */
+
+@media screen and (max-width: 1024px) {
+
+  .chat-list {
+    width: 340px;
+  }
+
+}
+
+/* ========================= */
+/* MOBILE */
+/* ========================= */
+
+@media screen and (max-width: 768px) {
+
+  .chat-list {
+    width: 100%;
+    height: calc(100vh - 70px);
+    border-right: none;
+    padding: 12px;
+  }
+
+  .chat-list-header {
+    padding: 8px 2px;
+  }
+
+  .chat-list-header h2 {
+    font-size: 20px;
+  }
+
+  .chat-list-header button {
+    padding: 9px 12px;
+    font-size: 14px;
+  }
+
+  .chat-list-body {
+    padding-bottom: 20px;
+  }
+
+}
+
+/* ========================= */
+/* SMALL MOBILE */
+/* ========================= */
+
+@media screen and (max-width: 480px) {
+
+  .chat-list {
+    padding: 10px;
+  }
+
+  .chat-list-header h2 {
+    font-size: 18px;
+  }
+
+  .chat-list-header button {
+    padding: 8px 10px;
+    font-size: 13px;
+  }
+
+  .no-chat {
+    font-size: 16px;
+  }
+
 }

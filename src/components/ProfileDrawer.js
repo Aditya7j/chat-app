@@ -126,72 +126,73 @@ const ProfileDrawer = ({
     if (!open) return null;
 
     return (
-        <div className="profile-drawer">
+        <div
+            className={`profile-overlay ${open ? "active" : ""
+                }`}
+        >
+            <div className="profile-drawer">
 
-            <button
-                className="close-btn"
-                onClick={onClose}
-            >
-                ✕
-            </button>
+                <button
+                    className="close-btn"
+                    onClick={onClose}
+                >
+                    ✕
+                </button>
 
-            <img
-                src={
-                    user?.avatar
-                        ? `http://localhost:5000${user.avatar}`
-                        : "https://i.pravatar.cc/150?img=2"
-                }
-                alt=""
-            />
-
-            <h2>
-                {user?.name}
-            </h2>
-
-            <p>
-                {user?.email}
-            </p>
-
-            <label
-                className="upload-btn"
-            >
-                {
-                    loading
-                        ? "Uploading..."
-                        : "Change Photo"
-                }
-
-                <input
-                    type="file"
-                    accept="image/*"
-                    hidden
-                    onChange={
-                        uploadImage
+                <img
+                    src={
+                        user?.avatar
+                            ? `http://localhost:5000${user.avatar}`
+                            : "https://i.pravatar.cc/150?img=2"
                     }
+                    alt=""
                 />
-            </label>
 
-            <div className="profile-section">
-                Shared Media
+                <h2>
+                    {user?.name}
+                </h2>
+
+                <p>
+                    {user?.email}
+                </p>
+
+                <label
+                    className="upload-btn"
+                >
+                    {
+                        loading
+                            ? "Uploading..."
+                            : "Change Photo"
+                    }
+
+                    <input
+                        type="file"
+                        accept="image/*"
+                        hidden
+                        onChange={uploadImage}
+                    />
+                </label>
+
+                <div className="profile-section">
+                    Shared Media
+                </div>
+
+                <div className="profile-section">
+                    Groups
+                </div>
+
+                <div className="profile-section">
+                    Files
+                </div>
+
+                <button
+                    className="logout-btn"
+                    onClick={handleLogout}
+                >
+                    Logout
+                </button>
+
             </div>
-
-            <div className="profile-section">
-                Groups
-            </div>
-
-            <div className="profile-section">
-                Files
-            </div>
-
-            <button
-                className="logout-btn"
-                onClick={
-                    handleLogout
-                }
-            >
-                Logout
-            </button>
-
         </div>
     );
 };

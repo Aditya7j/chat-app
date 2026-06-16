@@ -93,7 +93,9 @@ const ChatCard = ({ chat, onClick }) => {
         ? "active"
         : ""
         }`}
-      onClick={onClick}
+      onClick={() => {
+        onClick();
+      }}
     >
       <div className="chat-avatar">
 

@@ -7,7 +7,7 @@ import { ChatContext } from "../context/ChatContext";
 
 const ChatList = () => {
     const [groupOpen, setGroupOpen] = useState(false);
-    const { chats, setSelectedChat } = useContext(ChatContext);
+    const { chats, setSelectedChat, setShowChatWindow } = useContext(ChatContext);
 
     const handleGroup = () => {
         setGroupOpen(true);
@@ -35,9 +35,13 @@ const ChatList = () => {
                         <ChatCard
                             key={chat._id}
                             chat={chat}
-                            onClick={() =>
-                                setSelectedChat(chat)
-                            }
+                            onClick={() => {
+                                setSelectedChat(chat);
+
+                                if (window.innerWidth <= 768) {
+                                    setShowChatWindow(true);
+                                }
+                            }}
                         />
                     ))
                 ) : (

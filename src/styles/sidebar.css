@@ -6,6 +6,7 @@
   flex-direction: column;
   justify-content: space-between;
   border-right: 1px solid var(--border);
+  flex-shrink: 0;
 }
 
 .sidebar-logo {
@@ -14,7 +15,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: url('../assest/chat-logo.avif') no-repeat;
+  background: url("../assest/chat-logo.avif") no-repeat;
   background-size: contain;
   border-radius: 12px;
   margin: 10px auto;
@@ -55,9 +56,9 @@
 
 .sidebar-profile {
   padding: 20px;
-
   display: flex;
   justify-content: center;
+  cursor: pointer;
 }
 
 .sidebar-profile img {
@@ -65,4 +66,55 @@
   height: 42px;
   border-radius: 50%;
   object-fit: cover;
+}
+
+/* ========================= */
+/* MOBILE RESPONSIVE */
+/* ========================= */
+
+@media screen and (max-width: 768px) {
+
+  .sidebar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 70px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 12px;
+    z-index: 999;
+    border-right: none;
+    border-top: 1px solid var(--border);
+    background: rgba(15, 23, 42, 0.98);
+    backdrop-filter: blur(20px);
+  }
+
+  .sidebar-logo {
+    display: none;
+  }
+
+  .sidebar-menu {
+    flex-direction: row;
+    flex: 1;
+    margin-top: 0;
+    gap: 10px;
+    justify-content: center;
+  }
+
+  .menu-btn {
+    width: 42px;
+    height: 42px;
+    font-size: 18px;
+  }
+
+  .sidebar-profile {
+    padding: 0;
+  }
+
+  .sidebar-profile img {
+    width: 38px;
+    height: 38px;
+  }
 }

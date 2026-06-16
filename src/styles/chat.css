@@ -1,0 +1,40 @@
+.chat-page {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.chat-list-wrapper {
+  display: flex;
+}
+
+.chat-window-wrapper {
+  flex: 1;
+  display: flex;
+}
+
+/* MOBILE */
+
+@media (max-width: 768px) {
+  .chat-page {
+    width: 100%;
+  }
+
+  .chat-list-wrapper,
+  .chat-window-wrapper {
+    width: 100%;
+  }
+
+  .hide-mobile {
+    display: none;
+  }
+
+  .chat-window-wrapper {
+    display: none;
+  }
+
+  .show-mobile {
+    display: flex;
+    width: 100%;
+  }
+}

@@ -1,9 +1,35 @@
+.profile-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+
+  display: flex;
+  justify-content: flex-end;
+}
+
 .profile-drawer {
   width: 350px;
-  border-right: 1px solid var(--border);
+  height: 100vh;
+  background: var(--bg-primary);
+  border-left: 1px solid var(--border);
+
   padding: 20px;
+
   display: flex;
   flex-direction: column;
+
+  animation: slideDrawer 0.25s ease;
+}
+
+@keyframes slideDrawer {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
 }
 
 .profile-drawer img {
@@ -23,14 +49,7 @@
 .profile-drawer p {
   text-align: center;
   color: var(--text-secondary);
-}
-
-.profile-section {
-  margin-top: 20px;
-  background: var(--bg-card);
-  padding: 15px;
-  border-radius: 10px;
-  cursor: pointer;
+  word-break: break-word;
 }
 
 .close-btn {
@@ -51,6 +70,24 @@
   cursor: pointer;
   display: inline-block;
   text-align: center;
+  transition: 0.3s;
+}
+
+.upload-btn:hover {
+  opacity: 0.9;
+}
+
+.profile-section {
+  margin-top: 20px;
+  background: var(--bg-card);
+  padding: 15px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.25s ease;
+}
+
+.profile-section:hover {
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .logout-btn {
@@ -68,4 +105,62 @@
 
 .logout-btn:hover {
   opacity: 0.9;
+}
+
+/* ========================= */
+/* TABLET */
+/* ========================= */
+
+@media (max-width: 1024px) {
+
+  .profile-drawer {
+    width: 320px;
+  }
+
+}
+
+/* ========================= */
+/* MOBILE */
+/* ========================= */
+
+@media (max-width: 768px) {
+
+  .profile-drawer {
+    width: 280px;
+    padding: 16px;
+  }
+
+  .profile-drawer img {
+    width: 80px;
+    height: 80px;
+  }
+
+  .profile-drawer h2 {
+    font-size: 18px;
+  }
+
+  .profile-drawer p {
+    font-size: 13px;
+  }
+
+  .profile-section {
+    padding: 12px;
+    margin-top: 14px;
+  }
+}
+
+/* ========================= */
+/* SMALL MOBILE */
+/* ========================= */
+
+@media (max-width: 480px) {
+
+  .profile-drawer {
+    width: 100%;
+  }
+
+  .profile-drawer img {
+    width: 75px;
+    height: 75px;
+  }
 }
