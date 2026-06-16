@@ -8,7 +8,6 @@ const ChatProvider = ({ children }) => {
     const [selectedChat, setSelectedChat] = useState(null);
     const [messages, setMessages] = useState([]);
     const [onlineUsers, setOnlineUsers] = useState([]);
-
     const [showChatWindow, setShowChatWindow] = useState(false);
 
     return (

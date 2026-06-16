@@ -3,8 +3,8 @@ import {
     FiPhone,
     FiVideo,
     FiMoreVertical,
+    FiArrowLeft
 } from "react-icons/fi";
-
 import { useContext } from "react";
 import { ChatContext } from "../context/ChatContext";
 
@@ -13,6 +13,7 @@ const ChatHeader = () => {
     const {
         selectedChat,
         onlineUsers,
+        setShowChatWindow
     } = useContext(ChatContext);
 
     const userInfo = JSON.parse(
@@ -68,30 +69,72 @@ const ChatHeader = () => {
 
     const getLastSeen = () => {
 
-        const otherUser =
-            getOtherUser();
+        const otherUser = getOtherUser();
 
         if (!otherUser?.lastSeen) {
             return "Offline";
         }
 
-        const lastSeenDate =
-            new Date(otherUser.lastSeen);
+        const lastSeen = new Date(otherUser.lastSeen);
+        const now = new Date();
+        const isToday = lastSeen.toDateString() === now.toDateString();
+        const yesterday = new Date();
 
-        return `Last seen ${lastSeenDate.toLocaleTimeString(
+        yesterday.setDate(yesterday.getDate() - 1);
+
+        const isYesterday = lastSeen.toDateString() === yesterday.toDateString();
+
+        if (isToday) {
+
+            return `Last seen today at ${lastSeen.toLocaleTimeString(
+                [],
+                {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                }
+            )}`;
+        }
+
+        if (isYesterday) {
+
+            return `Last seen yesterday at ${lastSeen.toLocaleTimeString(
+                [],
+                {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                }
+            )}`;
+        }
+
+        const diffDays =
+            Math.floor((now - lastSeen) / (1000 * 60 * 60 * 24));
+
+        if (diffDays < 7) {
+            return `Last seen ${lastSeen.toLocaleDateString(
+                [],
+                {
+                    weekday: "long",
+                }
+            )}`;
+        }
+
+        return `Last seen ${lastSeen.toLocaleDateString(
             [],
             {
-                hour: "2-digit",
-                minute: "2-digit",
+                day: "numeric",
+                month: "short",
+                year: "numeric",
             }
         )}`;
     };
 
     return (
         <div className="chat-header">
-
             <div className="chat-user">
-
+                <FiArrowLeft
+                    className="mobile-back-btn"
+                    onClick={() => setShowChatWindow(false)}
+                />
                 <img
                     src={
                         getOtherUser()?.avatar
@@ -120,13 +163,10 @@ const ChatHeader = () => {
                                 ? "Online"
                                 : getLastSeen()}
                     </span>
-
                 </div>
-
             </div>
 
             <div className="chat-actions">
-
                 <button>
                     <FiPhone />
                 </button>
@@ -140,7 +180,6 @@ const ChatHeader = () => {
                 </button>
 
             </div>
-
         </div>
     );
 };

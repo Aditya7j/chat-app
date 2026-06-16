@@ -103,6 +103,19 @@
   opacity: 0.9;
 }
 
+.upload-btn,
+.logout-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.upload-btn:disabled,
+.logout-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
 /* ========================= */
 /* TABLET */
 /* ========================= */

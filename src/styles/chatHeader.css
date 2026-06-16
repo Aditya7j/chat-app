@@ -77,6 +77,10 @@
   color: var(--danger);
 }
 
+.mobile-back-btn {
+  display: none;
+}
+
 /* Tablet */
 
 @media (max-width: 768px) {
@@ -111,6 +115,13 @@
     height: 36px;
     font-size: 15px;
   }
+
+  .mobile-back-btn {
+    display: block;
+    font-size: 22px;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
 }
 
 /* Small Phones */
@@ -144,5 +155,11 @@
     height: 32px;
     font-size: 14px;
     border-radius: 8px;
+  }
+  .mobile-back-btn {
+    display: block;
+    font-size: 20px;
+    cursor: pointer;
+    flex-shrink: 0;
   }
 }

@@ -3,13 +3,21 @@ import { createContext, useEffect, useState } from "react";
 export const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
+
     const [user, setUser] = useState(null);
 
     useEffect(() => {
-        const userInfo = localStorage.getItem("userInfo");
+        try {
+            const userInfo =
+                localStorage.getItem("userInfo");
 
-        if (userInfo) {
-            setUser(JSON.parse(userInfo));
+            if (userInfo) {
+                setUser(JSON.parse(userInfo));
+            }
+
+        } catch (error) {
+            localStorage.removeItem("userInfo");
+            setUser(null);
         }
     }, []);
 

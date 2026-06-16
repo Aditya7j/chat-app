@@ -4,10 +4,15 @@ import { useContext, useEffect, useState } from "react";
 import api from "../services/api";
 import { useDebounce } from "../hooks/useDebounce";
 import { ChatContext } from "../context/ChatContext";
+import toast from "react-hot-toast";
+import { Oval } from "react-loader-spinner";
 
 const SearchBar = () => {
     const [search, setSearch] = useState("");
     const [results, setResults] = useState([]);
+    const [searchLoading, setSearchLoading] = useState(false);
+    const [chatLoading, setChatLoading] = useState(null);
+
     const debouncedValue = useDebounce(search, 300);
 
     const {
@@ -16,10 +21,9 @@ const SearchBar = () => {
         setSelectedChat,
     } = useContext(ChatContext);
 
-    const handleSearch = async (e) => {
+    const handleSearch = (e) => {
         setSearch(e.target.value);
     };
-
 
     useEffect(() => {
         const searchUsers = async () => {
@@ -29,6 +33,8 @@ const SearchBar = () => {
             }
 
             try {
+                setSearchLoading(true);
+
                 const userInfo = JSON.parse(
                     localStorage.getItem("userInfo")
                 );
@@ -46,14 +52,22 @@ const SearchBar = () => {
 
                 setResults(data);
             } catch (error) {
-                console.log(error);
+                toast.error(
+                    error.response?.data?.message ||
+                    "Failed to search users"
+                );
+            } finally {
+                setSearchLoading(false);
             }
-        }
+        };
+
         searchUsers();
     }, [debouncedValue]);
 
     const accessChat = async (userId) => {
         try {
+            setChatLoading(userId);
+
             const userInfo = JSON.parse(
                 localStorage.getItem("userInfo")
             );
@@ -82,12 +96,15 @@ const SearchBar = () => {
 
             setSearch("");
             setResults([]);
-
         } catch (error) {
-            console.log(error);
+            toast.error(
+                error.response?.data?.message ||
+                "Failed to open chat"
+            );
+        } finally {
+            setChatLoading(null);
         }
     };
-
 
     return (
         <div className="search-wrapper">
@@ -102,18 +119,53 @@ const SearchBar = () => {
                 />
             </div>
 
-            {results.length > 0 && (
+            {(searchLoading || results.length > 0) && (
                 <div className="search-results">
-                    {results.map((user) => (
+
+                    {searchLoading ? (
                         <div
-                            key={user._id}
-                            className="search-user"
-                            onClick={()=>accessChat(user._id)}
+                            style={{
+                                display: "flex",
+                                justifyContent: "center",
+                                padding: "20px",
+                            }}
                         >
-                            <strong>{user.name}</strong>
-                            <p>{user.email}</p>
+                            <Oval
+                                height={24}
+                                width={24}
+                                color="#6366f1"
+                                secondaryColor="#6366f1"
+                                strokeWidth={4}
+                            />
                         </div>
-                    ))}
+                    ) : (
+                        results.map((user) => (
+                            <div
+                                key={user._id}
+                                className="search-user"
+                                onClick={() =>
+                                    !chatLoading &&
+                                    accessChat(user._id)
+                                }
+                            >
+                                <strong>{user.name}</strong>
+
+                                <p>
+                                    {chatLoading === user._id ? (
+                                        <Oval
+                                            height={16}
+                                            width={16}
+                                            color="#6366f1"
+                                            secondaryColor="#6366f1"
+                                            strokeWidth={5}
+                                        />
+                                    ) : (
+                                        user.email
+                                    )}
+                                </p>
+                            </div>
+                        ))
+                    )}
                 </div>
             )}
         </div>

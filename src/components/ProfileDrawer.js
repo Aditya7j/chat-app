@@ -6,6 +6,8 @@ import {
 } from "react";
 
 import api from "../services/api";
+import toast from "react-hot-toast";
+import { Oval } from "react-loader-spinner";
 
 import { AuthContext } from "../context/AuthContext";
 
@@ -20,12 +22,13 @@ const ProfileDrawer = ({
         logout,
     } = useContext(AuthContext);
 
-    const [loading, setLoading] =
+    const [uploadLoading, setUploadLoading] =
         useState(false);
 
-    const uploadImage = async (
-        e
-    ) => {
+    const [logoutLoading, setLogoutLoading] =
+        useState(false);
+
+    const uploadImage = async (e) => {
 
         const file =
             e.target.files[0];
@@ -34,7 +37,7 @@ const ProfileDrawer = ({
 
         try {
 
-            setLoading(true);
+            setUploadLoading(true);
 
             const formData =
                 new FormData();
@@ -67,28 +70,31 @@ const ProfileDrawer = ({
 
             const updatedUser = {
                 ...userInfo,
-                avatar:
-                    data.avatar,
+                avatar: data.avatar,
             };
 
             localStorage.setItem(
                 "userInfo",
-                JSON.stringify(
-                    updatedUser
-                )
+                JSON.stringify(updatedUser)
             );
 
-            setUser(
-                updatedUser
+            setUser(updatedUser);
+
+            toast.success(
+                "Profile photo updated"
             );
 
         } catch (error) {
 
-            console.log(error);
+            toast.error(
+                error.response?.data
+                    ?.message ||
+                "Failed to upload image"
+            );
 
         } finally {
 
-            setLoading(false);
+            setUploadLoading(false);
 
         }
     };
@@ -96,6 +102,8 @@ const ProfileDrawer = ({
     const handleLogout = async () => {
 
         try {
+
+            setLogoutLoading(true);
 
             const userInfo =
                 JSON.parse(
@@ -115,10 +123,26 @@ const ProfileDrawer = ({
                 }
             );
 
+            toast.success(
+                "Logged out successfully"
+            );
+
         } catch (error) {
-            console.log(error);
+
+            toast.error(
+                error.response?.data
+                    ?.message ||
+                "Logout failed"
+            );
+
         } finally {
+
             logout();
+
+            localStorage.removeItem(
+                "userInfo"
+            );
+
             window.location.href = "/";
         }
     };
@@ -145,7 +169,7 @@ const ProfileDrawer = ({
                             ? `http://localhost:5000${user.avatar}`
                             : "https://i.pravatar.cc/150?img=2"
                     }
-                    alt=""
+                    alt="profile"
                 />
 
                 <h2>
@@ -159,18 +183,32 @@ const ProfileDrawer = ({
                 <label
                     className="upload-btn"
                 >
-                    {
-                        loading
-                            ? "Uploading..."
-                            : "Change Photo"
-                    }
+
+                    {uploadLoading ? (
+                        <Oval
+                            height={22}
+                            width={22}
+                            color="#fff"
+                            secondaryColor="#ffffff50"
+                            strokeWidth={4}
+                            visible={true}
+                        />
+                    ) : (
+                        "Change Photo"
+                    )}
 
                     <input
                         type="file"
                         accept="image/*"
                         hidden
-                        onChange={uploadImage}
+                        disabled={
+                            uploadLoading
+                        }
+                        onChange={
+                            uploadImage
+                        }
                     />
+
                 </label>
 
                 <div className="profile-section">
@@ -187,9 +225,25 @@ const ProfileDrawer = ({
 
                 <button
                     className="logout-btn"
-                    onClick={handleLogout}
+                    onClick={
+                        handleLogout
+                    }
+                    disabled={
+                        logoutLoading
+                    }
                 >
-                    Logout
+                    {logoutLoading ? (
+                        <Oval
+                            height={22}
+                            width={22}
+                            color="#fff"
+                            secondaryColor="#ffffff50"
+                            strokeWidth={4}
+                            visible={true}
+                        />
+                    ) : (
+                        "Logout"
+                    )}
                 </button>
 
             </div>

@@ -3,6 +3,7 @@ import "../styles/messageInput.css";
 import {
     FiSend,
     FiPaperclip,
+    FiSmile,
 } from "react-icons/fi";
 
 import {
@@ -13,7 +14,8 @@ import {
 import api from "../services/api";
 import socket from "../services/socket";
 import EmojiPicker from "emoji-picker-react";
-import { FiSmile } from "react-icons/fi";
+import { Oval } from "react-loader-spinner";
+import toast from "react-hot-toast";
 
 import {
     ChatContext,
@@ -23,6 +25,7 @@ const MessageInput = () => {
 
     const [content, setContent] = useState("");
     const [showEmoji, setShowEmoji] = useState(false);
+    const [sending, setSending] = useState(false);
 
     const {
         selectedChat,
@@ -51,6 +54,7 @@ const MessageInput = () => {
     };
 
     const onEmojiClick = (emojiData) => {
+
         setContent(
             (prev) => prev + emojiData.emoji
         );
@@ -63,6 +67,8 @@ const MessageInput = () => {
         if (!content.trim()) return;
 
         try {
+
+            setSending(true);
 
             const userInfo = JSON.parse(
                 localStorage.getItem(
@@ -101,20 +107,35 @@ const MessageInput = () => {
             setContent("");
 
         } catch (error) {
-            console.log(error);
+
+            toast.error(
+                error.response?.data
+                    ?.message ||
+                "Failed to send message"
+            );
+
+        } finally {
+
+            setSending(false);
+
         }
     };
 
     const handleKeyDown = (
         e
     ) => {
-        if (e.key === "Enter") {
+
+        if (
+            e.key === "Enter" &&
+            !sending
+        ) {
             sendMessage();
         }
     };
 
     return (
         <div className="message-input-wrapper">
+
             {
                 showEmoji && (
                     <div className="emoji-picker">
@@ -126,14 +147,14 @@ const MessageInput = () => {
                     </div>
                 )
             }
+
             <input
                 type="text"
                 placeholder="Write a message..."
                 value={content}
                 onChange={handleTyping}
-                onKeyDown={
-                    handleKeyDown
-                }
+                onKeyDown={handleKeyDown}
+                disabled={sending}
             />
 
             <button
@@ -141,18 +162,34 @@ const MessageInput = () => {
                 onClick={() =>
                     setShowEmoji(!showEmoji)
                 }
+                disabled={sending}
             >
                 <FiSmile />
             </button>
 
-            <button className="attach-btn">
+            <button
+                className="attach-btn"
+                disabled={sending}
+            >
                 <FiPaperclip />
             </button>
 
             <button
                 onClick={sendMessage}
+                disabled={sending}
             >
-                <FiSend />
+                {sending ? (
+                    <Oval
+                        height={18}
+                        width={18}
+                        color="#fff"
+                        secondaryColor="#fff"
+                        strokeWidth={4}
+                        visible={true}
+                    />
+                ) : (
+                    <FiSend />
+                )}
             </button>
 
         </div>
