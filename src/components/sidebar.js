@@ -1,35 +1,19 @@
 import "../styles/sidebar.css";
-
-import {
-    FiMessageSquare,
-    FiUsers,
-    FiSettings,
-    FiHome,
-} from "react-icons/fi";
-
+import { FiMessageSquare, FiUsers, FiSettings, FiHome } from "react-icons/fi";
 import { useContext, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
 import ProfileDrawer from "./ProfileDrawer";
 
 const Sidebar = () => {
 
-    const { user } =
-        useContext(AuthContext);
-
-    const [openProfile, setOpenProfile] =
-        useState(false);
-
-    console.log("user", user);
-
+    const { user } = useContext(AuthContext);
+    const [openProfile, setOpenProfile] = useState(false);
 
     return (
         <>
             <aside className="sidebar">
-
                 <div className="sidebar-logo"></div>
-
                 <div className="sidebar-menu">
-
                     <button className="menu-btn active">
                         <FiHome />
                     </button>
@@ -50,10 +34,7 @@ const Sidebar = () => {
 
                 <div
                     className="sidebar-profile"
-                    onClick={() =>
-                        setOpenProfile(true)
-                    }
-                >
+                    onClick={() => setOpenProfile(true)}>
                     <img
                         src={
                             user?.avatar
@@ -63,7 +44,6 @@ const Sidebar = () => {
                         alt="profile"
                     />
                 </div>
-
             </aside>
 
             <ProfileDrawer

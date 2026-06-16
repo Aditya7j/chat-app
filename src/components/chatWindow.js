@@ -172,7 +172,7 @@ const ChatWindow = () => {
                     <h2
                         style={{
                             textAlign: "center",
-                            marginTop: "100px",
+                            marginTop: "200px",
                             color: "#8b9bb4"
                         }}
                     >

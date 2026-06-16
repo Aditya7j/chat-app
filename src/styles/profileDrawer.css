@@ -4,22 +4,18 @@
   background: rgba(0, 0, 0, 0.45);
   backdrop-filter: blur(4px);
   z-index: 1000;
-
   display: flex;
   justify-content: flex-end;
 }
 
 .profile-drawer {
-  width: 350px;
+  width: 400px;
   height: 100vh;
   background: var(--bg-primary);
   border-left: 1px solid var(--border);
-
   padding: 20px;
-
   display: flex;
   flex-direction: column;
-
   animation: slideDrawer 0.25s ease;
 }
 

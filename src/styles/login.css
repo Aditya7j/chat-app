@@ -74,3 +74,12 @@
   color: var(--accent);
   margin-left: 5px;
 }
+
+@media (max-width: 768px){
+  .login-page{
+    padding: 0 15px;
+  }
+  .login-card{
+    padding: 20px 25px;
+  }
+}
