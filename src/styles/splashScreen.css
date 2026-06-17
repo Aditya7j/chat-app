@@ -1,0 +1,111 @@
+.splash-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 60px 0;
+  z-index: 99999;
+  opacity: 1;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.splash-container.fade-out {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.splash-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: auto;
+  transform: translateY(35px);
+}
+
+.brand-logo-wrapper {
+  color: #25d366;
+  margin-bottom: 18px;
+  animation: dynamicPulse 2.5s infinite ease-in-out;
+}
+
+.brand-title {
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: #54656f;
+  letter-spacing: 0.6px;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.indicator-wrapper {
+  margin-top: 45px;
+  margin-bottom: auto;
+  width: 140px;
+}
+
+.track-bar {
+  position: relative;
+  width: 100%;
+  height: 3px;
+  background-color: #e9edef;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.animated-progress-line {
+  position: absolute;
+  left: -45%;
+  height: 100%;
+  width: 45%;
+  background-color: #00a884;
+  border-radius: 10px;
+  animation: infiniteLineMove 1.4s infinite ease-in-out;
+}
+
+.splash-footer-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.meta-prefix {
+  font-size: 0.7rem;
+  color: #8696a0;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.meta-company {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #25d366;
+  letter-spacing: 1.2px;
+}
+
+@keyframes infiniteLineMove {
+  0% {
+    left: -45%;
+  }
+  50% {
+    left: 65%;
+    width: 45%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+@keyframes dynamicPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.03);
+  }
+}

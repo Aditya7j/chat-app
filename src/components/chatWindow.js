@@ -6,7 +6,7 @@ import socket from "../services/socket";
 import ChatHeader from "./chatHeader";
 import MessageInput from "./messageInput";
 import MessageBubble from "./messageBubble";
-import logoImg from "../../src/assest/chat-logo.avif";
+import logoImg from "../../src/assest/logo.png";
 import toast from "react-hot-toast";
 import { Oval } from "react-loader-spinner";
 

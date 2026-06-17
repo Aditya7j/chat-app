@@ -65,7 +65,7 @@ function Login() {
             <div className="login-card">
 
                 <div className="login-header">
-                    <h1>ChatTalk</h1>
+                    <h1>ChitChat</h1>
                     <p>Sign in to continue chatting</p>
                 </div>
 

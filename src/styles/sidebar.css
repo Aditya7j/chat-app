@@ -15,11 +15,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: url("../assest/chat-logo.avif") no-repeat;
+  background: url("../assest/logo.png") no-repeat;
   background-size: contain;
   border-radius: 12px;
   margin: 10px auto;
   cursor: pointer;
+  mix-blend-mode: exclusion;
+
 }
 
 .sidebar-menu {

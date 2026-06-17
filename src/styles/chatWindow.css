@@ -27,7 +27,8 @@
   height: 300px;
   object-fit: contain;
   border-radius: 12px;
-  mix-blend-mode: overlay;
+  mix-blend-mode: exclusion;
+  display: none;
 }
 
 .messages-container {

@@ -82,7 +82,7 @@ function Register() {
                     </h1>
 
                     <p>
-                        Join ChatTalk today
+                        Join ChitChat today
                     </p>
                 </div>
 
