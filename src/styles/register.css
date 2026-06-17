@@ -43,6 +43,7 @@
 
 .form-group label {
   margin-bottom: 8px;
+  color: var(--text-primary);
 }
 
 .form-group input {
@@ -58,18 +59,34 @@
   color: var(--text-secondary);
 }
 
+.form-group input:focus {
+  border-color: var(--accent);
+}
+
 .register-btn {
   height: 50px;
   margin-top: 10px;
   border: none;
   border-radius: 10px;
   background: var(--accent);
-  color: white;
+  color: #ffffff;
   font-size: 16px;
   cursor: pointer;
+
   display: flex;
   align-items: center;
   justify-content: center;
+
+  transition: 0.25s ease;
+}
+
+.register-btn:hover {
+  background: var(--accent-hover);
+}
+
+.register-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
 }
 
 .auth-footer {

@@ -1,11 +1,11 @@
 .chat-header {
   height: 75px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid var(--border);
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0 24px;
-  background: #0b1426;
+  background: var(--bg-secondary);
   flex-shrink: 0;
 }
 
@@ -23,7 +23,7 @@
   border-radius: 50%;
   object-fit: cover;
   flex-shrink: 0;
-  border: 2px solid rgba(255, 255, 255, 0.05);
+  border: 2px solid var(--border);
 }
 
 .chat-user > div {
@@ -33,7 +33,7 @@
 .chat-user h3 {
   font-size: 16px;
   font-weight: 600;
-  color: white;
+  color: var(--text-primary);
   margin: 0;
   white-space: nowrap;
   overflow: hidden;
@@ -49,6 +49,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   font-weight: 700;
+  color: var(--text-secondary);
 }
 
 .chat-actions {
@@ -61,23 +62,24 @@
   width: 38px;
   height: 38px;
   border-radius: 10px;
-  background: #131c2e;
-  border: 1px solid rgba(255, 255, 255, 0.03);
-  color: #8b9bb4;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+
   display: flex;
   align-items: center;
   justify-content: center;
+
   font-size: 16px;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .chat-actions button:hover {
-  background: #6366f1;
+  background: var(--accent);
   color: white;
-  border-color: transparent;
+  border-color: var(--accent);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
 }
 
 .chat-actions button:active {
@@ -85,23 +87,23 @@
 }
 
 .online {
-  color: #10b981;
+  color: var(--success);
 }
 
 .offline {
-  color: #ef4444;
+  color: var(--danger);
 }
 
 .mobile-back-btn {
   display: none;
   border: none;
   background: transparent;
-  color: #8b9bb4;
+  color: var(--text-secondary);
   transition: color 0.2s ease;
 }
 
 .mobile-back-btn:hover {
-  color: white;
+  color: var(--text-primary);
 }
 
 @media (max-width: 768px) {

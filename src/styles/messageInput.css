@@ -16,7 +16,7 @@
   background: var(--bg-card);
   border: 1px solid transparent;
   border-radius: 12px;
-  color: white;
+  color: var(--text-primary);
   padding: 0 15px;
   font-size: 14px;
   transition: all 0.25s ease;
@@ -24,7 +24,7 @@
 
 .message-input-wrapper > input:focus {
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+  box-shadow: 0 0 0 3px var(--accent-light);
 }
 
 .message-input-wrapper > input::placeholder {
@@ -36,15 +36,11 @@
   height: 50px;
   border-radius: 12px;
   background: var(--accent);
-  color: white;
-  font-size: 18px;
   border: none;
   cursor: pointer;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   transition: all 0.25s ease;
   flex-shrink: 0;
 }
@@ -54,20 +50,14 @@
 }
 
 .message-input-wrapper > button:last-child:hover {
-  box-shadow: 0 8px 20px rgba(99, 102, 241, 0.35);
+  box-shadow: var(--shadow);
 }
 
 .emoji-btn,
 .attach-btn {
   background: var(--bg-card) !important;
+  color: var(--text-primary);
 }
-
-.emoji-btn:hover,
-.attach-btn:hover {
-  background: rgba(255, 255, 255, 0.08) !important;
-}
-
-/* Emoji Picker */
 
 .emoji-picker {
   position: absolute;
@@ -78,8 +68,7 @@
   border-radius: 16px;
   overflow: hidden;
 
-  box-shadow:
-    0 15px 40px rgba(0, 0, 0, 0.45);
+  box-shadow: var(--shadow);
 }
 
 /* ========================= */
@@ -87,11 +76,9 @@
 /* ========================= */
 
 @media screen and (max-width: 1024px) {
-
   .message-input-wrapper {
     padding: 0 16px;
   }
-
 }
 
 /* ========================= */
@@ -99,7 +86,6 @@
 /* ========================= */
 
 @media screen and (max-width: 768px) {
-
   .message-input-wrapper {
     height: 72px;
     padding: 0 10px;
@@ -132,7 +118,6 @@
 /* ========================= */
 
 @media screen and (max-width: 480px) {
-
   .message-input-wrapper {
     padding: 0 8px;
     gap: 6px;

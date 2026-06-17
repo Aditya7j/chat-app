@@ -16,16 +16,20 @@
 
 .delete-modal {
   width: 400px;
-  background: var(--bg-primary);
+  background: var(--bg-secondary);
 
   border-radius: 18px;
   padding: 24px;
+
+  color: var(--text-primary);
+  border: 1px solid var(--border);
 
   animation: slideUp 0.3s ease;
 }
 
 .delete-modal h3 {
   margin-bottom: 10px;
+  color: var(--text-primary);
 }
 
 .delete-modal p {
@@ -53,12 +57,12 @@
 
 .cancel-delete-btn {
   background: var(--bg-card);
-  color: white;
+  color: var(--text-primary);
 }
 
 .confirm-delete-btn {
-  background: #ef4444;
-  color: white;
+  background: var(--danger);
+  color: #fff;
 
   min-width: 90px;
   height: 42px;
@@ -73,7 +77,7 @@
 }
 
 .confirm-delete-btn:hover {
-  background: #dc2626;
+  filter: brightness(0.9);
 }
 
 @keyframes fadeIn {
@@ -99,10 +103,8 @@
 }
 
 @media (max-width: 480px) {
-
   .delete-modal {
     width: 90%;
     padding: 20px;
   }
-
 }

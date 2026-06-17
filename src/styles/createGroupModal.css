@@ -1,7 +1,7 @@
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.6);
+  background: var(--overlay-bg);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -13,6 +13,8 @@
   background: var(--bg-secondary);
   border-radius: 16px;
   overflow: hidden;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
 }
 
 .modal-header {
@@ -23,9 +25,13 @@
   border-bottom: 1px solid var(--border);
 }
 
+.modal-header h2 {
+  color: var(--text-primary);
+}
+
 .modal-header button {
   background: transparent;
-  color: white;
+  color: var(--text-primary);
   font-size: 20px;
 }
 
@@ -39,10 +45,14 @@
 .modal-body input {
   height: 50px;
   background: var(--bg-card);
-  border: none;
+  border: 1px solid var(--border);
   border-radius: 10px;
   padding: 0 15px;
-  color: white;
+  color: var(--text-primary);
+}
+
+.modal-body input::placeholder {
+  color: var(--text-secondary);
 }
 
 .selected-users {
@@ -53,6 +63,7 @@
 
 .selected-users span {
   background: var(--accent);
+  color: #ffffff;
   padding: 8px 12px;
   border-radius: 20px;
   font-size: 14px;
@@ -61,6 +72,30 @@
 .create-group-btn {
   height: 50px;
   background: var(--accent);
-  color: white;
+  color: #ffffff;
   border-radius: 10px;
+  transition: 0.3s ease;
+}
+
+.create-group-btn:hover {
+  background: var(--accent-hover);
+}
+
+/* ========================= */
+/* MOBILE */
+/* ========================= */
+
+@media (max-width: 768px) {
+  .group-modal {
+    width: calc(100% - 24px);
+    margin: 12px;
+  }
+
+  .modal-header {
+    padding: 16px;
+  }
+
+  .modal-body {
+    padding: 16px;
+  }
 }

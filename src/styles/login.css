@@ -43,6 +43,7 @@
 
 .form-group label {
   margin-bottom: 8px;
+  color: var(--text-primary);
 }
 
 .form-group input {
@@ -50,17 +51,30 @@
   border: 1px solid var(--border);
   border-radius: 10px;
   background: var(--bg-card);
-  color: white;
+  color: var(--text-primary);
   padding: 0 15px;
+}
+
+.form-group input::placeholder {
+  color: var(--text-secondary);
 }
 
 .login-form button {
   height: 50px;
   border-radius: 10px;
   background: var(--accent);
-  color: white;
+  color: #ffffff;
   font-size: 16px;
   margin-top: 10px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-form button:disabled {
+  opacity: 0.8;
+  cursor: not-allowed;
 }
 
 .auth-footer {
@@ -75,24 +89,6 @@
 .auth-footer a {
   color: var(--accent);
   margin-left: 5px;
-}
-
-.login-form button {
-  height: 50px;
-  border-radius: 10px;
-  background: var(--accent);
-  color: white;
-  font-size: 16px;
-  margin-top: 10px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.login-form button:disabled {
-  opacity: 0.8;
-  cursor: not-allowed;
 }
 
 /* ========================= */

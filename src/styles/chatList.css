@@ -19,6 +19,7 @@
 .chat-list-header h2 {
   font-size: 22px;
   font-weight: 600;
+  color: var(--text-primary);
 }
 
 .chat-list-header button {
@@ -39,8 +40,9 @@
   overflow-y: auto;
   flex: 1;
   margin-top: 5px;
+
   scrollbar-width: thin;
-  scrollbar-color: rgba(139, 155, 180, 0.35) transparent;
+  scrollbar-color: var(--border) transparent;
 }
 
 .chat-list-body::-webkit-scrollbar {
@@ -52,12 +54,12 @@
 }
 
 .chat-list-body::-webkit-scrollbar-thumb {
-  background: rgba(139, 155, 180, 0.3);
+  background: var(--border);
   border-radius: 20px;
 }
 
 .chat-list-body::-webkit-scrollbar-thumb:hover {
-  background: rgba(139, 155, 180, 0.6);
+  background: var(--text-secondary);
 }
 
 .no-chat {
@@ -66,6 +68,7 @@
   text-align: center;
   text-transform: capitalize;
   margin: 20px 0 0;
+  color: var(--text-secondary);
 }
 
 /* ========================= */
@@ -73,11 +76,9 @@
 /* ========================= */
 
 @media screen and (max-width: 1024px) {
-
   .chat-list {
     width: 340px;
   }
-
 }
 
 /* ========================= */
@@ -85,7 +86,6 @@
 /* ========================= */
 
 @media screen and (max-width: 768px) {
-
   .chat-list {
     width: 100%;
     height: calc(100vh - 70px);
@@ -109,7 +109,6 @@
   .chat-list-body {
     padding-bottom: 20px;
   }
-
 }
 
 /* ========================= */
@@ -117,7 +116,6 @@
 /* ========================= */
 
 @media screen and (max-width: 480px) {
-
   .chat-list {
     padding: 10px;
   }
@@ -134,5 +132,4 @@
   .no-chat {
     font-size: 16px;
   }
-
 }

@@ -1,7 +1,7 @@
 .profile-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(4, 8, 19, 0.6);
+  background: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   z-index: 1000;
@@ -12,20 +12,21 @@
 .profile-drawer {
   width: 400px;
   height: 100vh;
-  background: #0b1426;
-  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--bg-primary);
+  border-left: 1px solid var(--border);
   padding: 30px 24px;
   display: flex;
   flex-direction: column;
   animation: slideDrawer 0.35s cubic-bezier(0.16, 1, 0.3, 1);
   box-sizing: border-box;
-  box-shadow: -10px 0 30px rgba(0, 0, 0, 0.25);
+  box-shadow: var(--shadow);
 }
 
 @keyframes slideDrawer {
   from {
     transform: translateX(100%);
   }
+
   to {
     transform: translateX(0);
   }
@@ -33,24 +34,27 @@
 
 .close-btn {
   border: none;
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--bg-card);
   cursor: pointer;
   font-size: 18px;
   margin-left: auto;
-  color: #8b9bb4;
+  color: var(--text-secondary);
+
   display: flex;
   align-items: center;
   justify-content: center;
+
   width: 36px;
   height: 36px;
   border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+
+  border: 1px solid var(--border);
   transition: all 0.2s ease;
 }
 
 .close-btn:hover {
-  background: rgba(255, 255, 255, 0.08);
-  color: white;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
   transform: rotate(90deg);
 }
 
@@ -59,25 +63,28 @@
   height: 110px;
   border-radius: 50%;
   display: block;
-  margin: 10px auto 0 auto;
+  margin: 10px auto 0;
   object-fit: cover;
-  border: 3px solid #6366f1;
-  box-shadow: 0 0 20px rgba(99, 102, 241, 0.25);
+
+  border: 3px solid var(--accent);
+  box-shadow: var(--shadow);
 }
 
 .profile-drawer h2 {
   text-align: center;
   margin-top: 18px;
   margin-bottom: 4px;
+
   font-size: 24px;
   font-weight: 700;
-  color: white;
+
+  color: var(--text-primary);
   letter-spacing: -0.5px;
 }
 
 .profile-drawer p {
   text-align: center;
-  color: #64748b;
+  color: var(--text-secondary);
   word-break: break-all;
   font-size: 14px;
   margin-top: 0;
@@ -85,28 +92,30 @@
 }
 
 .upload-btn {
-  margin-top: 0;
   margin-bottom: 12px;
-  background: #6366f1;
-  color: white;
+
+  background: var(--accent);
+  color: #ffffff;
+
   padding: 13px 20px;
   border-radius: 12px;
+
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
+
   text-align: center;
   font-size: 14px;
   font-weight: 600;
+
   border: none;
   transition: all 0.2s ease;
-  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
 }
 
 .upload-btn:hover {
-  background: #4f46e5;
+  background: var(--accent-hover);
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.35);
 }
 
 .upload-btn:active {
@@ -115,46 +124,60 @@
 
 .profile-section {
   margin-top: 12px;
-  background: #131c2e;
+
+  background: var(--bg-card);
   padding: 16px 20px;
+
   border-radius: 12px;
   cursor: pointer;
-  border: 1px solid rgba(255, 255, 255, 0.03);
+
+  border: 1px solid var(--border);
+
   display: flex;
   align-items: center;
   justify-content: space-between;
+
+  color: var(--text-primary);
+
   transition: all 0.2s ease;
 }
 
 .profile-section:hover {
-  background: #18233a;
-  border-color: rgba(99, 102, 241, 0.3);
+  background: var(--bg-secondary);
+  border-color: var(--accent);
   transform: translateX(-4px);
 }
 
 .logout-btn {
   margin-top: auto;
+
   width: 100%;
   padding: 14px;
+
   border: none;
   border-radius: 12px;
+
   background: rgba(239, 68, 68, 0.1);
-  color: #ef4444;
+  color: var(--danger);
+
   font-size: 14px;
   font-weight: 600;
+
   cursor: pointer;
+
   display: flex;
   align-items: center;
   justify-content: center;
+
   border: 1px solid rgba(239, 68, 68, 0.2);
+
   transition: all 0.2s ease;
 }
 
 .logout-btn:hover {
-  background: #ef4444;
-  color: white;
+  background: var(--danger);
+  color: #ffffff;
   border-color: transparent;
-  box-shadow: 0 6px 20px rgba(239, 68, 68, 0.25);
   transform: translateY(-2px);
 }
 
@@ -201,8 +224,9 @@
     padding: 14px 16px;
     border-radius: 10px;
   }
-  
-  .upload-btn, .logout-btn {
+
+  .upload-btn,
+  .logout-btn {
     padding: 12px 16px;
     border-radius: 10px;
   }

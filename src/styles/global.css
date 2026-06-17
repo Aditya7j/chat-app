@@ -4,24 +4,30 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+
+  transition:
+    background-color .25s ease,
+    color .25s ease,
+    border-color .25s ease;
 }
 
-body {
-  background: var(--bg-primary);
-  color: var(--text-primary);
-  font-family: "Montserrat", sans-serif;
+  body {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: "Montserrat", sans-serif;
 }
 
-a {
-  text-decoration: none;
-  color: inherit;
+  a {
+    text-decoration: none;
+    color: inherit;
 }
 
-button {
-  cursor: pointer;
-  border: none;
+  button {
+    cursor: pointer;
+    border: none;
 }
 
-input {
-  outline: none;
+  input {
+    outline: none;
 }
+

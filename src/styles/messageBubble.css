@@ -48,11 +48,11 @@
 }
 
 .own-message .message-bubble p {
-  color: var(--text-primary);
+  color: #ffffff;
 }
 
 .own-message .message-time {
-  color: rgba(255, 255, 255, 0.65);
+  color: rgba(255, 255, 255, 0.75);
 }
 
 @media (max-width: 768px) {

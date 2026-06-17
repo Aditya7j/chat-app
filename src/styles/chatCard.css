@@ -105,24 +105,19 @@
 
 .delete-chat-btn {
   border: none;
-  background: rgba(239, 68, 68, 0.12);
-  color: #ef4444;
-
+  background: var(--danger-soft);
+  color: var(--danger);
   width: 34px;
   height: 34px;
   border-radius: 8px;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   cursor: pointer;
   flex-shrink: 0;
-
   opacity: 0;
   visibility: hidden;
   transform: translateX(15px);
-
   transition: all 0.25s ease;
 }
 
@@ -139,7 +134,7 @@
 }
 
 .delete-chat-btn:hover {
-  background: rgba(239, 68, 68, 0.2);
+   background: var(--danger-soft-hover);
 }
 
 .delete-chat-btn:disabled {

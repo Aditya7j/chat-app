@@ -48,12 +48,12 @@
 
 .menu-btn:hover {
   background: var(--bg-card);
-  color: white;
+  color: var(--text-primary);
 }
 
 .menu-btn.active {
   background: var(--accent);
-  color: white;
+  color: #fff;
 }
 
 .sidebar-profile {
@@ -89,7 +89,6 @@
     z-index: 999;
     border-right: none;
     border-top: 1px solid var(--border);
-    background: rgba(15, 23, 42, 0.98);
     backdrop-filter: blur(20px);
   }
 
