@@ -205,13 +205,12 @@ const ChatWindow = () => {
                             key={message._id}
                             text={message.content}
                             createdAt={message.createdAt}
-                            own={
-                                message.sender._id ===
-                                userInfo._id
-                            }
+                            own={message.sender._id === userInfo._id}
+                            senderName={message.sender.name}
+                            senderId={message.sender._id}
+                            isGroupChat={selectedChat.isGroupChat}
                         />
                     ))
-
                 )}
 
                 {typing && (

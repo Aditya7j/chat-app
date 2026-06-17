@@ -25,6 +25,15 @@
   border: 1px solid var(--border);
 }
 
+.sender-name {
+  display: block;
+  user-select: none;
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: #6366f1;
+}
+
 .message-bubble p {
   margin: 0;
   font-size: 14px;

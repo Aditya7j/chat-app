@@ -48,6 +48,35 @@ const ChatHeader = () => {
         return otherUser?.name || "";
     };
 
+    const getGroupSubtitle = () => {
+
+        if (!selectedChat?.isGroupChat) {
+            return "";
+        }
+
+        const members = selectedChat.users
+            .filter(
+                (user) =>
+                    user._id !== userInfo._id
+            )
+            .map(
+                (user) => user.name
+            );
+
+        if (members.length <= 3) {
+            return members.join(", ");
+        }
+
+        const visibleMembers = members
+            .slice(0, 3)
+            .join(", ");
+
+        const remainingCount =
+            members.length - 3;
+
+        return `${visibleMembers} +${remainingCount}`;
+    };
+
     const isOnline = () => {
 
         if (
@@ -77,12 +106,19 @@ const ChatHeader = () => {
 
         const lastSeen = new Date(otherUser.lastSeen);
         const now = new Date();
-        const isToday = lastSeen.toDateString() === now.toDateString();
+        const isToday =
+            lastSeen.toDateString() ===
+            now.toDateString();
+
         const yesterday = new Date();
 
-        yesterday.setDate(yesterday.getDate() - 1);
+        yesterday.setDate(
+            yesterday.getDate() - 1
+        );
 
-        const isYesterday = lastSeen.toDateString() === yesterday.toDateString();
+        const isYesterday =
+            lastSeen.toDateString() ===
+            yesterday.toDateString();
 
         if (isToday) {
 
@@ -107,9 +143,13 @@ const ChatHeader = () => {
         }
 
         const diffDays =
-            Math.floor((now - lastSeen) / (1000 * 60 * 60 * 24));
+            Math.floor(
+                (now - lastSeen) /
+                (1000 * 60 * 60 * 24)
+            );
 
         if (diffDays < 7) {
+
             return `Last seen ${lastSeen.toLocaleDateString(
                 [],
                 {
@@ -130,11 +170,16 @@ const ChatHeader = () => {
 
     return (
         <div className="chat-header">
+
             <div className="chat-user">
+
                 <FiArrowLeft
                     className="mobile-back-btn"
-                    onClick={() => setShowChatWindow(false)}
+                    onClick={() =>
+                        setShowChatWindow(false)
+                    }
                 />
+
                 <img
                     src={
                         getOtherUser()?.avatar
@@ -148,7 +193,9 @@ const ChatHeader = () => {
 
                 <div>
 
-                    <h3>{getChatName()}</h3>
+                    <h3>
+                        {getChatName()}
+                    </h3>
 
                     <span
                         className={
@@ -158,15 +205,18 @@ const ChatHeader = () => {
                         }
                     >
                         {selectedChat?.isGroupChat
-                            ? "Group Chat"
+                            ? getGroupSubtitle()
                             : isOnline()
                                 ? "Online"
                                 : getLastSeen()}
                     </span>
+
                 </div>
+
             </div>
 
             <div className="chat-actions">
+
                 <button>
                     <FiPhone />
                 </button>
@@ -180,6 +230,7 @@ const ChatHeader = () => {
                 </button>
 
             </div>
+
         </div>
     );
 };
