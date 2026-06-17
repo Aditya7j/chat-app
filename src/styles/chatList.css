@@ -38,8 +38,7 @@
 .chat-list-body {
   overflow-y: auto;
   flex: 1;
-  margin-top: 15px;
-
+  margin-top: 5px;
   scrollbar-width: thin;
   scrollbar-color: rgba(139, 155, 180, 0.35) transparent;
 }
