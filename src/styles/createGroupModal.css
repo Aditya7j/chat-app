@@ -81,6 +81,43 @@
   background: var(--accent-hover);
 }
 
+.group-search-results {
+  max-height: 220px;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg-card);
+}
+
+.group-search-user {
+  padding: 12px 15px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--border);
+}
+
+.group-search-user:last-child {
+  border-bottom: none;
+}
+
+.group-search-user:hover {
+  background: var(--bg-secondary);
+}
+
+.group-search-user strong {
+  display: block;
+  color: var(--text-primary);
+}
+
+.group-search-user p {
+  margin-top: 4px;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.selected-users span {
+  cursor: pointer;
+}
+
 /* ========================= */
 /* MOBILE */
 /* ========================= */
