@@ -5,8 +5,12 @@ import {
     FiMoreVertical,
     FiArrowLeft
 } from "react-icons/fi";
-import { useContext } from "react";
+import {
+    useContext,
+    useState
+} from "react";
 import { ChatContext } from "../context/ChatContext";
+import GroupInfoModal from "./groupInfoModal";
 
 const ChatHeader = () => {
 
@@ -16,9 +20,15 @@ const ChatHeader = () => {
         setShowChatWindow
     } = useContext(ChatContext);
 
-    const userInfo = JSON.parse(
-        localStorage.getItem("userInfo")
-    );
+    const [showGroupInfo, setShowGroupInfo] =
+        useState(false);
+
+    const storedUserInfo =
+        localStorage.getItem("userInfo");
+
+    const userInfo = storedUserInfo
+        ? JSON.parse(storedUserInfo)
+        : {};
 
     const getOtherUser = () => {
 
@@ -104,8 +114,11 @@ const ChatHeader = () => {
             return "Offline";
         }
 
-        const lastSeen = new Date(otherUser.lastSeen);
+        const lastSeen =
+            new Date(otherUser.lastSeen);
+
         const now = new Date();
+
         const isToday =
             lastSeen.toDateString() ===
             now.toDateString();
@@ -168,70 +181,165 @@ const ChatHeader = () => {
         )}`;
     };
 
+    const openGroupInfo = () => {
+
+        if (!selectedChat?.isGroupChat) {
+            return;
+        }
+
+        setShowGroupInfo(true);
+    };
+
+    const handleGroupInfoKeyDown = (
+        event
+    ) => {
+
+        if (
+            event.key === "Enter" ||
+            event.key === " "
+        ) {
+            event.preventDefault();
+            openGroupInfo();
+        }
+    };
+
+    const getAvatarUrl = () => {
+
+        const otherUser =
+            getOtherUser();
+
+        if (otherUser?.avatar) {
+
+            if (
+                otherUser.avatar.startsWith(
+                    "http"
+                )
+            ) {
+                return otherUser.avatar;
+            }
+
+            return `http://localhost:5000${otherUser.avatar}`;
+        }
+
+        return `https://ui-avatars.com/api/?name=${encodeURIComponent(
+            getChatName()
+        )}&background=random`;
+    };
+
     return (
-        <div className="chat-header">
+        <>
+            <div className="chat-header">
 
-            <div className="chat-user">
+                <div className="chat-user">
 
-                <FiArrowLeft
-                    className="mobile-back-btn"
-                    onClick={() =>
-                        setShowChatWindow(false)
-                    }
-                />
+                    <FiArrowLeft
+                        className="mobile-back-btn"
+                        onClick={() =>
+                            setShowChatWindow(false)
+                        }
+                    />
 
-                <img
-                    src={
-                        getOtherUser()?.avatar
-                            ? `http://localhost:5000${getOtherUser().avatar}`
-                            : `https://ui-avatars.com/api/?name=${encodeURIComponent(
-                                getChatName()
-                            )}&background=random`
-                    }
-                    alt="user"
-                />
-
-                <div>
-
-                    <h3>
-                        {getChatName()}
-                    </h3>
-
-                    <span
-                        className={
-                            isOnline()
-                                ? "online"
-                                : "offline"
+                    <div
+                        className={`chat-user-details ${selectedChat?.isGroupChat
+                                ? "group-clickable"
+                                : ""
+                            }`}
+                        onClick={openGroupInfo}
+                        onKeyDown={
+                            handleGroupInfoKeyDown
+                        }
+                        role={
+                            selectedChat?.isGroupChat
+                                ? "button"
+                                : undefined
+                        }
+                        tabIndex={
+                            selectedChat?.isGroupChat
+                                ? 0
+                                : undefined
                         }
                     >
-                        {selectedChat?.isGroupChat
-                            ? getGroupSubtitle()
-                            : isOnline()
-                                ? "Online"
-                                : getLastSeen()}
-                    </span>
+                        <img
+                            src={getAvatarUrl()}
+                            alt={
+                                selectedChat?.isGroupChat
+                                    ? "Group"
+                                    : "User"
+                            }
+                        />
+
+                        <div className="chat-user-text">
+
+                            <h3>
+                                {getChatName()}
+                            </h3>
+
+                            <span
+                                className={
+                                    selectedChat
+                                        ?.isGroupChat
+                                        ? "group-members-status"
+                                        : isOnline()
+                                            ? "online"
+                                            : "offline"
+                                }
+                            >
+                                {selectedChat
+                                    ?.isGroupChat
+                                    ? getGroupSubtitle()
+                                    : isOnline()
+                                        ? "Online"
+                                        : getLastSeen()}
+                            </span>
+
+                        </div>
+                    </div>
+
+                </div>
+
+                <div className="chat-actions">
+
+                    <button
+                        type="button"
+                        aria-label="Start voice call"
+                    >
+                        <FiPhone />
+                    </button>
+
+                    <button
+                        type="button"
+                        aria-label="Start video call"
+                    >
+                        <FiVideo />
+                    </button>
+
+                    <button
+                        type="button"
+                        aria-label="Open chat information"
+                        onClick={openGroupInfo}
+                    >
+                        <FiMoreVertical />
+                    </button>
 
                 </div>
 
             </div>
 
-            <div className="chat-actions">
-
-                <button>
-                    <FiPhone />
-                </button>
-
-                <button>
-                    <FiVideo />
-                </button>
-
-                <button>
-                    <FiMoreVertical />
-                </button>
-
-            </div>
-
-        </div>
+            {showGroupInfo &&
+                selectedChat?.isGroupChat && (
+                    <GroupInfoModal
+                        chat={selectedChat}
+                        currentUserId={
+                            userInfo._id
+                        }
+                        onClose={() =>
+                            setShowGroupInfo(
+                                false
+                            )
+                        }
+                    />
+                )}
+        </>
     );
 };
 
