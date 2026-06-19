@@ -1,5 +1,10 @@
 import "../styles/chatCard.css";
-import { useContext, useState } from "react";
+
+import {
+  useContext,
+  useState,
+} from "react";
+
 import { ChatContext } from "../context/ChatContext";
 import { FiTrash2 } from "react-icons/fi";
 import api from "../services/api";
@@ -7,39 +12,44 @@ import toast from "react-hot-toast";
 import { Oval } from "react-loader-spinner";
 import DeleteChatModal from "./DeleteChatModal";
 
-const ChatCard = ({ chat, onClick }) => {
+const ChatCard = ({
+  chat,
+  onClick,
+}) => {
 
   const {
     selectedChat,
     onlineUsers,
-    chats,
     setChats,
     setSelectedChat,
   } = useContext(ChatContext);
 
-  const [deleting, setDeleting] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [
+    deleting,
+    setDeleting,
+  ] = useState(false);
 
-  const userInfo = JSON.parse(
-    localStorage.getItem("userInfo")
-  );
+  const [
+    showDeleteModal,
+    setShowDeleteModal,
+  ] = useState(false);
 
-  const getChatName = () => {
-
-    if (chat.isGroupChat) {
-      return chat.chatName;
-    }
-
-    const otherUser = chat.users.find(
-      (user) =>
-        user._id !== userInfo._id
+  const storedUserInfo =
+    localStorage.getItem(
+      "userInfo"
     );
 
-    return (
-      otherUser?.name ||
-      "Unknown User"
-    );
-  };
+  const userInfo =
+    storedUserInfo
+      ? JSON.parse(
+        storedUserInfo
+      )
+      : {};
+
+  const unreadCount =
+    Number(
+      chat.unreadCount
+    ) || 0;
 
   const getOtherUser = () => {
 
@@ -47,9 +57,25 @@ const ChatCard = ({ chat, onClick }) => {
       return null;
     }
 
-    return chat.users.find(
+    return chat.users?.find(
       (user) =>
-        user._id !== userInfo._id
+        user._id !==
+        userInfo._id
+    );
+  };
+
+  const getChatName = () => {
+
+    if (chat.isGroupChat) {
+      return (
+        chat.chatName ||
+        "Unnamed Group"
+      );
+    }
+
+    return (
+      getOtherUser()?.name ||
+      "Unknown User"
     );
   };
 
@@ -69,84 +95,163 @@ const ChatCard = ({ chat, onClick }) => {
     );
   };
 
+  const getAvatarUrl = () => {
+
+    const otherUser =
+      getOtherUser();
+
+    if (otherUser?.avatar) {
+
+      if (
+        otherUser.avatar.startsWith(
+          "http"
+        )
+      ) {
+        return otherUser.avatar;
+      }
+
+      return `http://localhost:5000${otherUser.avatar}`;
+    }
+
+    return `https://ui-avatars.com/api/?name=${encodeURIComponent(
+      getChatName()
+    )}&background=random`;
+  };
+
   const getLatestMessage = () => {
 
-    if (!chat.latestMessage) {
+    if (
+      !chat.latestMessage
+    ) {
       return "Start a conversation";
     }
 
     let message =
-      chat.latestMessage.content;
-
-    if (message.length > 35) {
-      message =
-        message.substring(
-          0,
-          35
-        ) + "...";
-    }
+      chat.latestMessage.content ||
+      "";
 
     if (
-      chat.latestMessage.sender
-        ?._id ===
+      message.length > 35
+    ) {
+      message =
+        `${message.substring(
+          0,
+          35
+        )}...`;
+    }
+
+    const latestSender =
+      chat.latestMessage.sender;
+
+    const latestSenderId =
+      typeof latestSender ===
+        "object"
+        ? latestSender?._id
+        : latestSender;
+
+    if (
+      latestSenderId ===
       userInfo._id
     ) {
       return `You: ${message}`;
     }
 
+    if (
+      chat.isGroupChat &&
+      latestSender?.name
+    ) {
+      return `${latestSender.name}: ${message}`;
+    }
+
     return message;
   };
 
-  const handleDeleteChat = async () => {
+  const getUpdatedTime = () => {
 
-    try {
+    if (!chat.updatedAt) {
+      return "";
+    }
 
-      setDeleting(true);
+    const updatedDate =
+      new Date(
+        chat.updatedAt
+      );
 
-      await api.delete(
-        `/chat/${chat._id}`,
+    if (
+      Number.isNaN(
+        updatedDate.getTime()
+      )
+    ) {
+      return "";
+    }
+
+    return updatedDate
+      .toLocaleTimeString(
+        [],
         {
-          headers: {
-            Authorization:
-              `Bearer ${userInfo.token}`,
-          },
+          hour: "2-digit",
+          minute: "2-digit",
         }
       );
-
-      setChats(
-        chats.filter(
-          (item) =>
-            item._id !== chat._id
-        )
-      );
-
-      if (
-        selectedChat?._id ===
-        chat._id
-      ) {
-        setSelectedChat(null);
-      }
-
-      toast.success(
-        "Chat deleted successfully"
-      );
-
-      setShowDeleteModal(false);
-
-    } catch (error) {
-
-      toast.error(
-        error?.response?.data
-          ?.message ||
-        "Failed to delete chat"
-      );
-
-    } finally {
-
-      setDeleting(false);
-
-    }
   };
+
+  const handleDeleteChat =
+    async () => {
+
+      try {
+
+        setDeleting(true);
+
+        await api.delete(
+          `/chat/${chat._id}`,
+          {
+            headers: {
+              Authorization:
+                `Bearer ${userInfo.token}`,
+            },
+          }
+        );
+
+        setChats(
+          (previousChats) =>
+            previousChats.filter(
+              (item) =>
+                item._id !==
+                chat._id
+            )
+        );
+
+        if (
+          selectedChat?._id ===
+          chat._id
+        ) {
+          setSelectedChat(
+            null
+          );
+        }
+
+        toast.success(
+          "Chat deleted successfully"
+        );
+
+        setShowDeleteModal(
+          false
+        );
+
+      } catch (error) {
+
+        toast.error(
+          error?.response
+            ?.data?.message ||
+          "Failed to delete chat"
+        );
+
+      } finally {
+
+        setDeleting(false);
+
+      }
+    };
 
   return (
     <>
@@ -163,18 +268,16 @@ const ChatCard = ({ chat, onClick }) => {
 
           <img
             src={
-              getOtherUser()?.avatar
-                ? `http://localhost:5000${getOtherUser().avatar}`
-                : `https://ui-avatars.com/api/?name=${encodeURIComponent(
-                  getChatName()
-                )}&background=random`
+              getAvatarUrl()
             }
-            alt="avatar"
+            alt={
+              getChatName()
+            }
           />
 
           {!chat.isGroupChat &&
             isOnline() && (
-              <span className="online-dot"></span>
+              <span className="online-dot" />
             )}
 
         </div>
@@ -189,25 +292,24 @@ const ChatCard = ({ chat, onClick }) => {
 
             <div className="chat-actions-right">
 
-              <span>
-                {new Date(
-                  chat.updatedAt
-                ).toLocaleTimeString(
-                  [],
-                  {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  }
-                )}
+              <span className="chat-updated-time">
+                {getUpdatedTime()}
               </span>
 
               <button
+                type="button"
                 className="delete-chat-btn"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setShowDeleteModal(true);
+                aria-label="Delete chat"
+                onClick={(event) => {
+                  event.stopPropagation();
+
+                  setShowDeleteModal(
+                    true
+                  );
                 }}
-                disabled={deleting}
+                disabled={
+                  deleting
+                }
               >
                 {deleting ? (
                   <Oval
@@ -228,9 +330,26 @@ const ChatCard = ({ chat, onClick }) => {
 
           <div className="chat-bottom">
 
-            <p>
+            <p
+              className={
+                unreadCount > 0
+                  ? "unread-message-preview"
+                  : ""
+              }
+            >
               {getLatestMessage()}
             </p>
+
+            {unreadCount > 0 && (
+              <span
+                className="unread-count"
+                aria-label={`${unreadCount} unread messages`}
+              >
+                {unreadCount > 99
+                  ? "99+"
+                  : unreadCount}
+              </span>
+            )}
 
           </div>
 
@@ -239,11 +358,17 @@ const ChatCard = ({ chat, onClick }) => {
       </div>
 
       <DeleteChatModal
-        open={showDeleteModal}
-        onClose={() =>
-          setShowDeleteModal(false)
+        open={
+          showDeleteModal
         }
-        onDelete={handleDeleteChat}
+        onClose={() =>
+          setShowDeleteModal(
+            false
+          )
+        }
+        onDelete={
+          handleDeleteChat
+        }
         deleting={deleting}
       />
     </>

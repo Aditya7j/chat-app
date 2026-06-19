@@ -25,6 +25,13 @@
   flex-shrink: 0;
 }
 
+.chat-avatar img {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
 .online-dot {
   position: absolute;
   right: 2px;
@@ -34,13 +41,6 @@
   border-radius: 50%;
   background: var(--success);
   border: 2px solid var(--bg-primary);
-}
-
-.chat-avatar img {
-  width: 52px;
-  height: 52px;
-  border-radius: 50%;
-  object-fit: cover;
 }
 
 .chat-details {
@@ -56,43 +56,14 @@
 }
 
 .chat-top h4 {
+  min-width: 0;
+  margin: 0;
   font-size: 15px;
   font-weight: 600;
+  color: var(--text-primary);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-
-.chat-top span {
-  font-size: 12px;
-  color: var(--text-secondary);
-  flex-shrink: 0;
-}
-
-.chat-bottom {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 6px;
-}
-
-.chat-bottom p {
-  color: var(--text-secondary);
-  width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-size: 13px;
-}
-
-.unread-count {
-  width: 20px;
-  height: 20px;
-  background: var(--accent);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 11px;
 }
 
 .chat-actions-right {
@@ -102,6 +73,59 @@
   flex-shrink: 0;
 }
 
+.chat-updated-time {
+  font-size: 12px;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+
+.chat-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 6px;
+  min-width: 0;
+}
+
+.chat-bottom p {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  color: var(--text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 13px;
+}
+
+.chat-bottom p.unread-message-preview {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.unread-count {
+  min-width: 21px;
+  height: 21px;
+  padding: 0 6px;
+  flex-shrink: 0;
+  box-sizing: border-box;
+
+  background: var(--accent);
+  color: #ffffff;
+  border-radius: 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+  box-shadow: 0 4px 12px
+    rgba(99, 102, 241, 0.3);
+}
+
 .delete-chat-btn {
   border: none;
   background: var(--danger-soft);
@@ -109,23 +133,22 @@
   width: 34px;
   height: 34px;
   border-radius: 8px;
+
   display: flex;
   align-items: center;
   justify-content: center;
+
   cursor: pointer;
   flex-shrink: 0;
+
   opacity: 0;
   visibility: hidden;
   transform: translateX(15px);
+
   transition: all 0.25s ease;
 }
 
-.chat-card:hover .delete-chat-btn {
-  opacity: 1;
-  visibility: visible;
-  transform: translateX(0);
-}
-
+.chat-card:hover .delete-chat-btn,
 .chat-card.active .delete-chat-btn {
   opacity: 1;
   visibility: visible;
@@ -133,17 +156,15 @@
 }
 
 .delete-chat-btn:hover {
-   background: var(--danger-soft-hover);
+  background: var(
+    --danger-soft-hover
+  );
 }
 
 .delete-chat-btn:disabled {
   cursor: not-allowed;
   opacity: 0.7;
 }
-
-/* ========================= */
-/* TABLET */
-/* ========================= */
 
 @media screen and (max-width: 1024px) {
   .chat-card {
@@ -155,10 +176,6 @@
     height: 48px;
   }
 }
-
-/* ========================= */
-/* MOBILE */
-/* ========================= */
 
 @media screen and (max-width: 768px) {
   .chat-card {
@@ -177,7 +194,7 @@
     max-width: 150px;
   }
 
-  .chat-top span {
+  .chat-updated-time {
     font-size: 11px;
   }
 
@@ -185,32 +202,31 @@
     font-size: 12px;
   }
 
+  .unread-count {
+    min-width: 20px;
+    height: 20px;
+    font-size: 10px;
+  }
+
   .online-dot {
     width: 10px;
     height: 10px;
   }
 
-  /* hide icon by default on mobile */
   .delete-chat-btn {
     opacity: 0;
     visibility: hidden;
     transform: translateX(15px);
-
     width: 30px;
     height: 30px;
   }
 
-  /* show only selected chat icon */
   .chat-card.active .delete-chat-btn {
     opacity: 1;
     visibility: visible;
     transform: translateX(0);
   }
 }
-
-/* ========================= */
-/* SMALL MOBILE */
-/* ========================= */
 
 @media screen and (max-width: 480px) {
   .chat-card {
@@ -232,12 +248,23 @@
     max-width: 120px;
   }
 
-  .chat-top span {
+  .chat-updated-time {
     font-size: 10px;
+  }
+
+  .chat-bottom {
+    gap: 7px;
   }
 
   .chat-bottom p {
     font-size: 11px;
+  }
+
+  .unread-count {
+    min-width: 19px;
+    height: 19px;
+    padding: 0 5px;
+    font-size: 9px;
   }
 
   .online-dot {

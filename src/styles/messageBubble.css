@@ -31,7 +31,6 @@
   font-size: 13px;
   font-weight: 700;
   margin-bottom: 6px;
-  color: #6366f1;
 }
 
 .message-bubble p {
@@ -41,6 +40,14 @@
   color: var(--text-primary);
 }
 
+.message-meta {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  min-height: 15px;
+}
+
 .message-time {
   display: block;
   text-align: right;
@@ -48,6 +55,40 @@
   color: var(--text-muted);
   font-weight: 500;
   user-select: none;
+}
+
+.message-status {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: 17px;
+  height: 13px;
+  flex-shrink: 0;
+  user-select: none;
+}
+
+.message-status svg {
+  position: absolute;
+  width: 13px;
+  height: 13px;
+  stroke-width: 2.8;
+}
+
+.message-status .first-check {
+  left: 0;
+}
+
+.message-status .second-check {
+  left: 5px;
+}
+
+.message-unseen {
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.message-seen {
+  color: #38bdf8;
 }
 
 .own-message .message-bubble {
@@ -83,6 +124,11 @@
     font-size: 14px;
   }
 
+  .sender-name {
+    font-size: 12px;
+    margin-bottom: 5px;
+  }
+
   .message-time {
     font-size: 10px;
   }
@@ -98,7 +144,17 @@
     font-size: 13px;
   }
 
+  .sender-name {
+    font-size: 11px;
+    margin-bottom: 4px;
+  }
+
   .message-time {
     font-size: 9px;
+  }
+
+  .message-status {
+    transform: scale(0.92);
+    transform-origin: right center;
   }
 }

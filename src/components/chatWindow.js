@@ -1,5 +1,11 @@
 import "../styles/chatWindow.css";
-import { useContext, useEffect, useRef, useState } from "react";
+import {
+    useCallback,
+    useContext,
+    useEffect,
+    useRef,
+    useState,
+} from "react";
 import { ChatContext } from "../context/ChatContext";
 import api from "../services/api";
 import socket from "../services/socket";
@@ -10,134 +16,504 @@ import logoImg from "../../src/assest/logo.png";
 import toast from "react-hot-toast";
 import { Oval } from "react-loader-spinner";
 
+const getUserInfo = () => {
+    const storedUserInfo =
+        localStorage.getItem("userInfo");
+
+    if (!storedUserInfo) {
+        return null;
+    }
+
+    try {
+        return JSON.parse(storedUserInfo);
+    } catch (error) {
+        return null;
+    }
+};
+
+const getId = (item) => {
+    if (!item) {
+        return null;
+    }
+
+    if (typeof item === "object") {
+        return item._id?.toString();
+    }
+
+    return item.toString();
+};
+
+const addUserToReadBy = (
+    readBy,
+    userId
+) => {
+    const currentReadBy =
+        Array.isArray(readBy)
+            ? readBy
+            : [];
+
+    const normalizedUserId =
+        getId(userId);
+
+    if (!normalizedUserId) {
+        return currentReadBy;
+    }
+
+    const hasAlreadyRead =
+        currentReadBy.some(
+            (reader) =>
+                getId(reader) ===
+                normalizedUserId
+        );
+
+    if (hasAlreadyRead) {
+        return currentReadBy;
+    }
+
+    return [
+        ...currentReadBy,
+        userId,
+    ];
+};
+
 const ChatWindow = () => {
     const {
         selectedChat,
         messages,
         setMessages,
+        setChats,
     } = useContext(ChatContext);
 
-    const messagesEndRef = useRef(null);
+    const messagesContainerRef =
+        useRef(null);
 
-    const [typing, setTyping] = useState(false);
-    const [loading, setLoading] = useState(false);
+    const messagesEndRef =
+        useRef(null);
+
+    const [typing, setTyping] =
+        useState(false);
+
+    const [loading, setLoading] =
+        useState(false);
+
+    const scrollToBottom =
+        useCallback(
+            (behavior = "smooth") => {
+                const container =
+                    messagesContainerRef.current;
+
+                if (container) {
+                    container.scrollTo({
+                        top:
+                            container.scrollHeight,
+                        behavior,
+                    });
+
+                    return;
+                }
+
+                messagesEndRef.current
+                    ?.scrollIntoView({
+                        behavior,
+                        block: "end",
+                    });
+            },
+            []
+        );
+
+    const markMessagesAsRead =
+        useCallback(
+            async (chatId) => {
+                if (!chatId) {
+                    return;
+                }
+
+                const userInfo =
+                    getUserInfo();
+
+                if (
+                    !userInfo?.token ||
+                    !userInfo?._id
+                ) {
+                    return;
+                }
+
+                try {
+                    const config = {
+                        headers: {
+                            Authorization:
+                                `Bearer ${userInfo.token}`,
+                        },
+                    };
+
+                    const { data } =
+                        await api.put(
+                            `/message/read/${chatId}`,
+                            {},
+                            config
+                        );
+
+                    setChats(
+                        (previousChats) =>
+                            previousChats.map(
+                                (chat) =>
+                                    chat._id ===
+                                        chatId
+                                        ? {
+                                            ...chat,
+                                            unreadCount: 0,
+                                        }
+                                        : chat
+                            )
+                    );
+
+                    const messageIds =
+                        Array.isArray(
+                            data?.messageIds
+                        )
+                            ? data.messageIds.map(
+                                (messageId) =>
+                                    messageId.toString()
+                            )
+                            : [];
+
+                    if (
+                        messageIds.length === 0
+                    ) {
+                        return;
+                    }
+
+                    setMessages(
+                        (previousMessages) =>
+                            previousMessages.map(
+                                (message) => {
+                                    const isUpdated =
+                                        messageIds.includes(
+                                            message._id.toString()
+                                        );
+
+                                    if (!isUpdated) {
+                                        return message;
+                                    }
+
+                                    return {
+                                        ...message,
+                                        readBy:
+                                            addUserToReadBy(
+                                                message.readBy,
+                                                userInfo._id
+                                            ),
+                                    };
+                                }
+                            )
+                    );
+
+                    socket.emit(
+                        "mark messages read",
+                        {
+                            chatId,
+                            messageIds,
+                        }
+                    );
+
+                } catch (error) {
+                    console.error(
+                        "Failed to mark messages as read:",
+                        error?.response
+                            ?.data?.message ||
+                        error.message
+                    );
+                }
+            },
+            [
+                setChats,
+                setMessages,
+            ]
+        );
 
     useEffect(() => {
-        const fetchMessages = async () => {
+        const fetchMessages =
+            async () => {
+                if (
+                    !selectedChat?._id
+                ) {
+                    return;
+                }
 
-            if (!selectedChat) return;
+                try {
+                    setLoading(true);
 
-            try {
+                    const userInfo =
+                        getUserInfo();
 
-                setLoading(true);
+                    if (
+                        !userInfo?.token
+                    ) {
+                        toast.error(
+                            "Please login again"
+                        );
 
-                const userInfo = JSON.parse(
-                    localStorage.getItem("userInfo")
-                );
+                        return;
+                    }
 
-                const config = {
-                    headers: {
-                        Authorization: `Bearer ${userInfo.token}`,
-                    },
-                };
+                    const config = {
+                        headers: {
+                            Authorization:
+                                `Bearer ${userInfo.token}`,
+                        },
+                    };
 
-                const { data } = await api.get(
-                    `/message/${selectedChat._id}`,
-                    config
-                );
+                    const { data } =
+                        await api.get(
+                            `/message/${selectedChat._id}`,
+                            config
+                        );
 
-                setMessages(data);
+                    setMessages(
+                        Array.isArray(data)
+                            ? data
+                            : []
+                    );
 
-            } catch (error) {
+                    await markMessagesAsRead(
+                        selectedChat._id
+                    );
 
-                toast.error(
-                    error?.response?.data?.message ||
-                    "Failed to load messages"
-                );
+                } catch (error) {
+                    toast.error(
+                        error?.response
+                            ?.data?.message ||
+                        "Failed to load messages"
+                    );
 
-            } finally {
-
-                setLoading(false);
-
-            }
-        };
+                } finally {
+                    setLoading(false);
+                }
+            };
 
         fetchMessages();
 
-    }, [selectedChat, setMessages]);
+    }, [
+        selectedChat,
+        setMessages,
+        markMessagesAsRead,
+    ]);
 
     useEffect(() => {
+        const handleMessageReceived =
+            async (newMessage) => {
+                const incomingChatId =
+                    typeof newMessage?.chat ===
+                        "object"
+                        ? newMessage.chat?._id
+                        : newMessage?.chat;
+
+                if (
+                    !selectedChat?._id ||
+                    incomingChatId?.toString() !==
+                    selectedChat._id.toString()
+                ) {
+                    return;
+                }
+
+                setMessages(
+                    (previousMessages) => {
+                        const exists =
+                            previousMessages.some(
+                                (message) =>
+                                    message._id ===
+                                    newMessage._id
+                            );
+
+                        if (exists) {
+                            return previousMessages;
+                        }
+
+                        return [
+                            ...previousMessages,
+                            newMessage,
+                        ];
+                    }
+                );
+
+                setTyping(false);
+
+                await markMessagesAsRead(
+                    selectedChat._id
+                );
+            };
 
         socket.on(
             "message received",
-            (newMessage) => {
-
-                setMessages((prev) => {
-
-                    const exists = prev.some(
-                        (msg) =>
-                            msg._id ===
-                            newMessage._id
-                    );
-
-                    if (exists) return prev;
-
-                    return [
-                        ...prev,
-                        newMessage,
-                    ];
-                });
-            }
+            handleMessageReceived
         );
 
         return () => {
             socket.off(
-                "message received"
+                "message received",
+                handleMessageReceived
             );
         };
 
-    }, [setMessages]);
+    }, [
+        selectedChat,
+        setMessages,
+        markMessagesAsRead,
+    ]);
 
     useEffect(() => {
+        const handleMessagesRead = (
+            readData
+        ) => {
+            const {
+                chatId,
+                messageIds,
+                readByUserId,
+            } = readData || {};
+
+            if (
+                !selectedChat?._id ||
+                selectedChat._id.toString() !==
+                chatId?.toString() ||
+                !Array.isArray(messageIds) ||
+                !readByUserId
+            ) {
+                return;
+            }
+
+            const normalizedMessageIds =
+                messageIds.map(
+                    (messageId) =>
+                        messageId.toString()
+                );
+
+            setMessages(
+                (previousMessages) =>
+                    previousMessages.map(
+                        (message) => {
+                            const isUpdated =
+                                normalizedMessageIds.includes(
+                                    message._id.toString()
+                                );
+
+                            if (!isUpdated) {
+                                return message;
+                            }
+
+                            return {
+                                ...message,
+                                readBy:
+                                    addUserToReadBy(
+                                        message.readBy,
+                                        readByUserId
+                                    ),
+                            };
+                        }
+                    )
+            );
+        };
+
+        socket.on(
+            "messages read",
+            handleMessagesRead
+        );
+
+        return () => {
+            socket.off(
+                "messages read",
+                handleMessagesRead
+            );
+        };
+
+    }, [
+        selectedChat,
+        setMessages,
+    ]);
+
+    useEffect(() => {
+        const handleTyping = (
+            chatId
+        ) => {
+            if (
+                selectedChat?._id
+                    ?.toString() ===
+                chatId?.toString()
+            ) {
+                setTyping(true);
+            }
+        };
+
+        const handleStopTyping = (
+            chatId
+        ) => {
+            if (
+                selectedChat?._id
+                    ?.toString() ===
+                chatId?.toString()
+            ) {
+                setTyping(false);
+            }
+        };
 
         socket.on(
             "typing",
-            (chatId) => {
-
-                if (
-                    selectedChat &&
-                    selectedChat._id === chatId
-                ) {
-                    setTyping(true);
-                }
-            }
+            handleTyping
         );
 
         socket.on(
             "stop typing",
-            (chatId) => {
-
-                if (
-                    selectedChat &&
-                    selectedChat._id === chatId
-                ) {
-                    setTyping(false);
-                }
-            }
+            handleStopTyping
         );
 
         return () => {
-            socket.off("typing");
-            socket.off("stop typing");
+            socket.off(
+                "typing",
+                handleTyping
+            );
+
+            socket.off(
+                "stop typing",
+                handleStopTyping
+            );
         };
 
     }, [selectedChat]);
 
+    const lastMessageId =
+        messages.length > 0
+            ? messages[
+                messages.length - 1
+            ]?._id
+            : null;
+
     useEffect(() => {
-        messagesEndRef.current?.scrollIntoView({
-            behavior: "smooth",
-        });
-    }, [messages, typing]);
+        if (loading) {
+            return;
+        }
+
+        const animationFrame =
+            window.requestAnimationFrame(
+                () => {
+                    scrollToBottom(
+                        "smooth"
+                    );
+                }
+            );
+
+        return () => {
+            window.cancelAnimationFrame(
+                animationFrame
+            );
+        };
+
+    }, [
+        selectedChat?._id,
+        lastMessageId,
+        messages.length,
+        typing,
+        loading,
+        scrollToBottom,
+    ]);
 
     if (!selectedChat) {
         return (
@@ -148,6 +524,7 @@ const ChatWindow = () => {
                         alt="logo"
                         className="chat-inner-wrapper-img"
                     />
+
                     <h3>
                         Select a chat to start messaging
                     </h3>
@@ -156,24 +533,30 @@ const ChatWindow = () => {
         );
     }
 
-    const userInfo = JSON.parse(
-        localStorage.getItem("userInfo")
-    );
+    const userInfo =
+        getUserInfo();
 
     return (
         <section className="chat-window">
 
             <ChatHeader />
 
-            <div className="messages-container">
+            <div
+                className="messages-container"
+                ref={
+                    messagesContainerRef
+                }
+            >
 
                 {loading ? (
 
                     <div
                         style={{
                             display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
+                            justifyContent:
+                                "center",
+                            alignItems:
+                                "center",
                             height: "100%",
                         }}
                     >
@@ -190,9 +573,12 @@ const ChatWindow = () => {
 
                     <h2
                         style={{
-                            textAlign: "center",
-                            marginTop: "200px",
-                            color: "#8b9bb4",
+                            textAlign:
+                                "center",
+                            marginTop:
+                                "200px",
+                            color:
+                                "#8b9bb4",
                         }}
                     >
                         No messages yet
@@ -200,32 +586,75 @@ const ChatWindow = () => {
 
                 ) : (
 
-                    messages.map((message) => (
-                        <MessageBubble
-                            key={message._id}
-                            text={message.content}
-                            createdAt={message.createdAt}
-                            own={message.sender._id === userInfo._id}
-                            senderName={message.sender.name}
-                            senderId={message.sender._id}
-                            isGroupChat={selectedChat.isGroupChat}
-                        />
-                    ))
+                    messages.map(
+                        (message) => {
+                            const senderId =
+                                getId(
+                                    message.sender
+                                );
+
+                            return (
+                                <MessageBubble
+                                    key={
+                                        message._id
+                                    }
+                                    text={
+                                        message.content
+                                    }
+                                    createdAt={
+                                        message.createdAt
+                                    }
+                                    own={
+                                        senderId ===
+                                        userInfo?._id
+                                            ?.toString()
+                                    }
+                                    senderName={
+                                        typeof message.sender ===
+                                            "object"
+                                            ? message.sender
+                                                ?.name
+                                            : ""
+                                    }
+                                    senderId={
+                                        senderId
+                                    }
+                                    isGroupChat={
+                                        selectedChat
+                                            .isGroupChat
+                                    }
+                                    readBy={
+                                        message.readBy ||
+                                        []
+                                    }
+                                    chatUsers={
+                                        selectedChat.users ||
+                                        []
+                                    }
+                                />
+                            );
+                        }
+                    )
                 )}
 
                 {typing && (
                     <p
                         style={{
-                            color: "#8b9bb4",
-                            fontSize: "14px",
-                            padding: "10px",
+                            color:
+                                "#8b9bb4",
+                            fontSize:
+                                "14px",
+                            padding:
+                                "10px",
                         }}
                     >
                         Typing...
                     </p>
                 )}
 
-                <div ref={messagesEndRef}></div>
+                <div
+                    ref={messagesEndRef}
+                />
 
             </div>
 

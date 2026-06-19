@@ -1,4 +1,5 @@
 import "../styles/messageBubble.css";
+import { FiCheck } from "react-icons/fi";
 
 const MessageBubble = ({
     own,
@@ -6,7 +7,9 @@ const MessageBubble = ({
     createdAt,
     senderName,
     isGroupChat,
-    senderId
+    senderId,
+    readBy = [],
+    chatUsers = [],
 }) => {
 
     const getSenderColor = (id) => {
@@ -19,18 +22,96 @@ const MessageBubble = ({
             "#ef4444",
         ];
 
+        const safeId = id?.toString() || "";
+
         let hash = 0;
 
-        for (let i = 0; i < id.length; i++) {
-            hash += id.charCodeAt(i);
+        for (
+            let index = 0;
+            index < safeId.length;
+            index++
+        ) {
+            hash += safeId.charCodeAt(index);
         }
 
-        return colors[hash % colors.length];
+        return colors[
+            hash % colors.length
+        ];
     };
+
+    const getUserId = (user) => {
+
+        if (!user) {
+            return null;
+        }
+
+        if (typeof user === "object") {
+            return user._id?.toString();
+        }
+
+        return user.toString();
+    };
+
+    const isMessageSeen = () => {
+
+        if (!own) {
+            return false;
+        }
+
+        const senderUserId =
+            getUserId(senderId);
+
+        const readUserIds =
+            new Set(
+                readBy
+                    .map(getUserId)
+                    .filter(Boolean)
+            );
+
+        const otherMemberIds =
+            chatUsers
+                .map(getUserId)
+                .filter(
+                    (userId) =>
+                        userId &&
+                        userId !==
+                        senderUserId
+                );
+
+        if (
+            otherMemberIds.length === 0
+        ) {
+            return false;
+        }
+
+        return otherMemberIds.every(
+            (memberId) =>
+                readUserIds.has(
+                    memberId
+                )
+        );
+    };
+
+    const seen = isMessageSeen();
+
+    const formattedTime =
+        createdAt
+            ? new Date(
+                createdAt
+            ).toLocaleTimeString(
+                [],
+                {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                }
+            )
+            : "";
 
     return (
         <div
-            className={`message-row ${own ? "own-message" : ""
+            className={`message-row ${own
+                    ? "own-message"
+                    : ""
                 }`}
         >
             <div className="message-bubble">
@@ -39,26 +120,50 @@ const MessageBubble = ({
                     <span
                         className="sender-name"
                         style={{
-                            color: getSenderColor(senderId),
+                            color:
+                                getSenderColor(
+                                    senderId
+                                ),
                         }}
                     >
-                        {senderName}
+                        {senderName ||
+                            "Unknown user"}
                     </span>
                 )}
 
                 <p>{text}</p>
 
-                <span className="message-time">
-                    {new Date(
-                        createdAt
-                    ).toLocaleTimeString(
-                        [],
-                        {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                        }
+                <div className="message-meta">
+
+                    <span className="message-time">
+                        {formattedTime}
+                    </span>
+
+                    {own && (
+                        <span
+                            className={`message-status ${seen
+                                    ? "message-seen"
+                                    : "message-unseen"
+                                }`}
+                            title={
+                                seen
+                                    ? isGroupChat
+                                        ? "Seen by all members"
+                                        : "Seen"
+                                    : "Not seen yet"
+                            }
+                            aria-label={
+                                seen
+                                    ? "Message seen"
+                                    : "Message not seen"
+                            }
+                        >
+                            <FiCheck className="first-check" />
+                            <FiCheck className="second-check" />
+                        </span>
                     )}
-                </span>
+
+                </div>
 
             </div>
         </div>
