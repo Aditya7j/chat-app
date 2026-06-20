@@ -59,6 +59,7 @@
   display: flex;
   justify-content: center;
   cursor: pointer;
+  background: var(--chat-sidebar-bg);
 }
 
 .sidebar-profile img {
