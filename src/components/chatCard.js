@@ -12,11 +12,14 @@ import toast from "react-hot-toast";
 import { Oval } from "react-loader-spinner";
 import DeleteChatModal from "./DeleteChatModal";
 
+const SERVER_URL =
+  process.env.REACT_APP_SOCKET_URL ||
+  "http://localhost:5000";
+
 const ChatCard = ({
   chat,
   onClick,
 }) => {
-
   const {
     selectedChat,
     onlineUsers,
@@ -52,7 +55,6 @@ const ChatCard = ({
     ) || 0;
 
   const getOtherUser = () => {
-
     if (chat.isGroupChat) {
       return null;
     }
@@ -65,7 +67,6 @@ const ChatCard = ({
   };
 
   const getChatName = () => {
-
     if (chat.isGroupChat) {
       return (
         chat.chatName ||
@@ -80,7 +81,6 @@ const ChatCard = ({
   };
 
   const isOnline = () => {
-
     if (chat.isGroupChat) {
       return false;
     }
@@ -96,12 +96,10 @@ const ChatCard = ({
   };
 
   const getAvatarUrl = () => {
-
     const otherUser =
       getOtherUser();
 
     if (otherUser?.avatar) {
-
       if (
         otherUser.avatar.startsWith(
           "http"
@@ -110,7 +108,7 @@ const ChatCard = ({
         return otherUser.avatar;
       }
 
-      return `http://localhost:5000${otherUser.avatar}`;
+      return `${SERVER_URL}${otherUser.avatar}`;
     }
 
     return `https://ui-avatars.com/api/?name=${encodeURIComponent(
@@ -119,7 +117,6 @@ const ChatCard = ({
   };
 
   const getLatestMessage = () => {
-
     if (
       !chat.latestMessage
     ) {
@@ -167,7 +164,6 @@ const ChatCard = ({
   };
 
   const getUpdatedTime = () => {
-
     if (!chat.updatedAt) {
       return "";
     }
@@ -197,9 +193,7 @@ const ChatCard = ({
 
   const handleDeleteChat =
     async () => {
-
       try {
-
         setDeleting(true);
 
         await api.delete(
@@ -239,7 +233,6 @@ const ChatCard = ({
         );
 
       } catch (error) {
-
         toast.error(
           error?.response
             ?.data?.message ||
@@ -247,9 +240,7 @@ const ChatCard = ({
         );
 
       } finally {
-
         setDeleting(false);
-
       }
     };
 
@@ -263,35 +254,25 @@ const ChatCard = ({
           }`}
         onClick={onClick}
       >
-
         <div className="chat-avatar">
-
           <img
-            src={
-              getAvatarUrl()
-            }
-            alt={
-              getChatName()
-            }
+            src={getAvatarUrl()}
+            alt={getChatName()}
           />
 
           {!chat.isGroupChat &&
             isOnline() && (
               <span className="online-dot" />
             )}
-
         </div>
 
         <div className="chat-details">
-
           <div className="chat-top">
-
             <h4>
               {getChatName()}
             </h4>
 
             <div className="chat-actions-right">
-
               <span className="chat-updated-time">
                 {getUpdatedTime()}
               </span>
@@ -307,9 +288,7 @@ const ChatCard = ({
                     true
                   );
                 }}
-                disabled={
-                  deleting
-                }
+                disabled={deleting}
               >
                 {deleting ? (
                   <Oval
@@ -323,13 +302,10 @@ const ChatCard = ({
                   <FiTrash2 />
                 )}
               </button>
-
             </div>
-
           </div>
 
           <div className="chat-bottom">
-
             <p
               className={
                 unreadCount > 0
@@ -350,11 +326,8 @@ const ChatCard = ({
                   : unreadCount}
               </span>
             )}
-
           </div>
-
         </div>
-
       </div>
 
       <DeleteChatModal

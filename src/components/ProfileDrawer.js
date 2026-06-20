@@ -11,6 +11,10 @@ import { Oval } from "react-loader-spinner";
 
 import { AuthContext } from "../context/AuthContext";
 
+const SERVER_URL =
+    process.env.REACT_APP_SOCKET_URL ||
+    "http://localhost:5000";
+
 const ProfileDrawer = ({
     open,
     onClose,
@@ -28,10 +32,25 @@ const ProfileDrawer = ({
     const [logoutLoading, setLogoutLoading] =
         useState(false);
 
-    const uploadImage = async (e) => {
+    const getProfileImageUrl = () => {
+
+        if (!user?.avatar) {
+            return "https://i.pravatar.cc/150?img=2";
+        }
+
+        if (
+            user.avatar.startsWith("http")
+        ) {
+            return user.avatar;
+        }
+
+        return `${SERVER_URL}${user.avatar}`;
+    };
+
+    const uploadImage = async (event) => {
 
         const file =
-            e.target.files[0];
+            event.target.files[0];
 
         if (!file) return;
 
@@ -47,11 +66,22 @@ const ProfileDrawer = ({
                 file
             );
 
+            const storedUserInfo =
+                localStorage.getItem(
+                    "userInfo"
+                );
+
+            if (!storedUserInfo) {
+                toast.error(
+                    "Please login again"
+                );
+
+                return;
+            }
+
             const userInfo =
                 JSON.parse(
-                    localStorage.getItem(
-                        "userInfo"
-                    )
+                    storedUserInfo
                 );
 
             const { data } =
@@ -75,7 +105,9 @@ const ProfileDrawer = ({
 
             localStorage.setItem(
                 "userInfo",
-                JSON.stringify(updatedUser)
+                JSON.stringify(
+                    updatedUser
+                )
             );
 
             setUser(updatedUser);
@@ -96,6 +128,7 @@ const ProfileDrawer = ({
 
             setUploadLoading(false);
 
+            event.target.value = "";
         }
     };
 
@@ -105,23 +138,29 @@ const ProfileDrawer = ({
 
             setLogoutLoading(true);
 
-            const userInfo =
-                JSON.parse(
-                    localStorage.getItem(
-                        "userInfo"
-                    )
+            const storedUserInfo =
+                localStorage.getItem(
+                    "userInfo"
                 );
 
-            await api.post(
-                "/auth/logout",
-                {},
-                {
-                    headers: {
-                        Authorization:
-                            `Bearer ${userInfo.token}`,
-                    },
-                }
-            );
+            if (storedUserInfo) {
+
+                const userInfo =
+                    JSON.parse(
+                        storedUserInfo
+                    );
+
+                await api.post(
+                    "/auth/logout",
+                    {},
+                    {
+                        headers: {
+                            Authorization:
+                                `Bearer ${userInfo.token}`,
+                        },
+                    }
+                );
+            }
 
             toast.success(
                 "Logged out successfully"
@@ -157,18 +196,16 @@ const ProfileDrawer = ({
             <div className="profile-drawer">
 
                 <button
+                    type="button"
                     className="close-btn"
                     onClick={onClose}
+                    aria-label="Close profile"
                 >
                     ✕
                 </button>
 
                 <img
-                    src={
-                        user?.avatar
-                            ? `http://localhost:5000${user.avatar}`
-                            : "https://i.pravatar.cc/150?img=2"
-                    }
+                    src={getProfileImageUrl()}
                     alt="profile"
                 />
 
@@ -180,9 +217,7 @@ const ProfileDrawer = ({
                     {user?.email}
                 </p>
 
-                <label
-                    className="upload-btn"
-                >
+                <label className="upload-btn">
 
                     {uploadLoading ? (
                         <Oval
@@ -224,6 +259,7 @@ const ProfileDrawer = ({
                 </div>
 
                 <button
+                    type="button"
                     className="logout-btn"
                     onClick={
                         handleLogout

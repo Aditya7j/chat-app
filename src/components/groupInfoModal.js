@@ -10,6 +10,10 @@ import {
     useMemo
 } from "react";
 
+const SERVER_URL =
+    process.env.REACT_APP_SOCKET_URL ||
+    "http://localhost:5000";
+
 const GroupInfoModal = ({
     chat,
     currentUserId,
@@ -136,7 +140,7 @@ const GroupInfoModal = ({
                 return user.avatar;
             }
 
-            return `http://localhost:5000${user.avatar}`;
+            return `${SERVER_URL}${user.avatar}`;
         }
 
         return `https://ui-avatars.com/api/?name=${encodeURIComponent(

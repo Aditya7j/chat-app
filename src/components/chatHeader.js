@@ -12,6 +12,10 @@ import {
 import { ChatContext } from "../context/ChatContext";
 import GroupInfoModal from "./groupInfoModal";
 
+const SERVER_URL =
+    process.env.REACT_APP_SOCKET_URL ||
+    "http://localhost:5000";
+
 const ChatHeader = () => {
 
     const {
@@ -218,7 +222,7 @@ const ChatHeader = () => {
                 return otherUser.avatar;
             }
 
-            return `http://localhost:5000${otherUser.avatar}`;
+            return `${SERVER_URL}${otherUser.avatar}`;
         }
 
         return `https://ui-avatars.com/api/?name=${encodeURIComponent(
